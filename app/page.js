@@ -1,69 +1,1566 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Scene from "@/components/Scene";
+import SciFiButton from "@/components/SciFiButton";
+import SectionNavigation from "@/components/SectionNavigation";
+import AudioToggle from "@/components/AudioToggle";
+import { CyberCardShell } from "@/components/CyberCard";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import { scrollState } from "@/lib/scrollState";
+
+/* =====================================================
+   ACADEMIC STATUS DATA (CHAPTER 01: ORIGIN)
+===================================================== */
+const academics = [
+  {
+    id: "01",
+    label: "10TH",
+    value: "95.65%",
+    numericVal: 95.65,
+    decimals: 2,
+    suffix: "%",
+    subtext: "SECONDARY",
+    kanji: "学業",
+  },
+  {
+    id: "02",
+    label: "12TH",
+    value: "90.67%",
+    numericVal: 90.67,
+    decimals: 2,
+    suffix: "%",
+    subtext: "HIGHER SEC",
+    kanji: "修得",
+  },
+  {
+    id: "03",
+    label: "CURRENT CGPA",
+    value: "9.26",
+    numericVal: 9.26,
+    decimals: 2,
+    suffix: "",
+    subtext: "UNDERGRAD",
+    kanji: "成績",
+  },
+];
+
+/* =====================================================
+   PROBLEM SOLVING / DSA DATA (CHAPTER 01: ORIGIN)
+===================================================== */
+const codingProfiles = [
+  {
+    id: "01",
+    name: "LeetCode",
+    description: "Data Structures & Algorithms",
+    icon: "/icons/leetcode.svg",
+    url: "https://leetcode.com/", // Replace with actual LeetCode profile URL
+    accent: "leetcode",
+    tag: "01 / PLATFORM",
+    kanji: "鍛錬",
+  },
+  {
+    id: "02",
+    name: "GeeksforGeeks",
+    description: "DSA & Problem Solving",
+    icon: "/icons/gfg.svg",
+    url: "https://auth.geeksforgeeks.org/user/", // Replace with actual GFG profile URL
+    accent: "gfg",
+    tag: "02 / PLATFORM",
+    kanji: "修練",
+  },
+  {
+    id: "03",
+    name: "Coding Ninjas",
+    description: "DSA & Algorithms",
+    icon: "/icons/coding-ninjas.svg",
+    url: "https://www.naukri.com/code360/profile/", // Replace with actual Coding Ninjas profile URL
+    accent: "coding-ninjas",
+    tag: "03 / PLATFORM",
+    kanji: "攻略",
+  },
+];
+
+/* =====================================================
+   JOURNEY DATA (CHAPTER 02: THE JOURNEY)
+===================================================== */
+const journeyEntries = [
+  {
+    id: "01",
+    label: "ENTRY 01",
+    title: "COMPUTER SCIENCE",
+    kanji: "基盤",
+    description:
+      "Started my journey in Computer Science and began building a strong foundation in programming, problem solving and software development.",
+    tags: ["Programming Fundamentals", "Problem Solving", "Software Engineering"],
+  },
+  {
+    id: "02",
+    label: "ENTRY 02",
+    title: "WEB DEVELOPMENT",
+    kanji: "開発",
+    description:
+      "Explored web development and started building projects using HTML, CSS, JavaScript, React and Next.js. Built projects while learning frontend and full-stack development.",
+    tags: ["HTML / CSS", "JavaScript", "React", "Next.js", "Full-Stack"],
+  },
+  {
+    id: "03",
+    label: "ENTRY 03",
+    title: "DATA STRUCTURES & ALGORITHMS",
+    kanji: "修練",
+    description:
+      "Currently strengthening my Data Structures and Algorithms skills by regularly solving problems across LeetCode, GeeksforGeeks and Coding Ninjas.",
+    tags: [
+      "Arrays & Strings",
+      "Binary Search",
+      "Linked Lists",
+      "Stacks & Queues",
+      "Trees & Graphs",
+      "DP",
+    ],
+  },
+  {
+    id: "04",
+    label: "ENTRY 04",
+    title: "DATA SCIENCE",
+    kanji: "探求",
+    description:
+      "Currently exploring Data Science and building my understanding of data-driven problem solving, data analysis, statistics, Python and machine learning.",
+    tags: ["Python", "Data Analysis", "Statistics", "Machine Learning"],
+  },
+  {
+    id: "05",
+    label: "ENTRY 05",
+    title: "CURRENT JOURNEY",
+    kanji: "前進",
+    isCurrent: true,
+    description:
+      "Continuously improving my skills in Web Development, DSA, Data Science, and Creative Development. Building projects, solving problems and learning new technologies along the way.",
+    tags: ["Web Development", "DSA Practice", "Data Science", "Creative Dev"],
+  },
+];
+
+/* =====================================================
+   PROJECTS DATA (CHAPTER 03: MISSIONS)
+===================================================== */
+const projects = [
+  {
+    id: "01",
+    title: "GET ME A CHAI",
+    subtitle: "CREATOR MONETIZATION PLATFORM",
+    description:
+      "A full-stack platform that allows creators to build communities, create tiers, publish posts and receive support from their audience.",
+    tech: [
+      "NEXT.JS",
+      "MONGODB",
+      "NEXTAUTH",
+      "CLOUDINARY",
+      "TAILWIND",
+    ],
+  },
+  {
+    id: "02",
+    title: "PASSWORD MANAGER",
+    subtitle: "SECURE FULL-STACK APPLICATION",
+    description:
+      "A full-stack password management application with a React frontend, Express backend and MongoDB database.",
+    tech: [
+      "REACT",
+      "NODE.JS",
+      "EXPRESS",
+      "MONGODB",
+    ],
+  },
+  {
+    id: "03",
+    title: "SPOTIFY CLONE",
+    subtitle: "MUSIC EXPERIENCE",
+    description:
+      "A responsive Spotify-inspired interface focused on recreating the modern music streaming experience.",
+    tech: [
+      "HTML",
+      "CSS",
+      "JAVASCRIPT",
+    ],
+  },
+  {
+    id: "04",
+    title: "NETFLIX CLONE",
+    subtitle: "STREAMING EXPERIENCE",
+    description:
+      "A Netflix-inspired landing experience with a focus on responsive layouts and modern UI design.",
+    tech: [
+      "HTML",
+      "CSS",
+      "JAVASCRIPT",
+    ],
+  },
+  {
+    id: "05",
+    title: "MICROSOFT CLONE",
+    subtitle: "CORPORATE WEB EXPERIENCE",
+    description:
+      "A responsive recreation of the Microsoft homepage focused on layout, navigation and visual hierarchy.",
+    tech: [
+      "HTML",
+      "CSS",
+      "JAVASCRIPT",
+    ],
+  },
+];
+
+/* =====================================================
+   PROFILES DATA (CHAPTER 04: ALLIES)
+===================================================== */
+const profiles = [
+  {
+    number: "01",
+    title: "GITHUB",
+    subtitle: "CODE ARCHIVE",
+    description:
+      "Explore my projects, experiments and development journey.",
+    url: "https://github.com/rohanmendon26-byte",
+  },
+  {
+    number: "02",
+    title: "LINKEDIN",
+    subtitle: "PROFESSIONAL NETWORK",
+    description:
+      "Connect with me and follow my professional journey.",
+    url: "https://www.linkedin.com/",
+  },
+  {
+    number: "03",
+    title: "EMAIL",
+    subtitle: "DIRECT CONNECTION",
+    description:
+      "Have an idea, opportunity or project? Let's talk.",
+    url: "mailto:your-email@gmail.com",
+  },
+];
+
+/* =====================================================
+   CONTACT INFORMATION (CHAPTER 05: FINAL CHAPTER)
+===================================================== */
+const contact = {
+  email: "your-email@gmail.com",
+  github: "https://github.com/rohanmendon26-byte",
+  linkedin: "https://www.linkedin.com/",
+};
+
+/* =====================================================
+   SKILLS DATASET (CHAPTER 02: THE ARSENAL)
+===================================================== */
+const skills = [
+  {
+    id: "javascript",
+    number: "01",
+    name: "JavaScript",
+    category: "CORE LANGUAGE",
+    icon: "/icons/javascript.svg",
+    accent: "javascript",
+    status: "CORE",
+    abilityCode: "SYS.ABILITY // 01",
+    subtext: "Core Development & Logic",
+    featured: true,
+  },
+  {
+    id: "react",
+    number: "02",
+    name: "React",
+    category: "FRONTEND ENGINE",
+    icon: "/icons/react.svg",
+    accent: "react",
+    status: "CURRENT",
+    abilityCode: "SYS.ABILITY // 02",
+    subtext: "Component Architecture & UI",
+    featured: true,
+  },
+  {
+    id: "nextjs",
+    number: "03",
+    name: "Next.js",
+    category: "FULL-STACK FRAMEWORK",
+    icon: "/icons/nextjs.svg",
+    accent: "nextjs",
+    status: "CURRENT",
+    abilityCode: "SYS.ABILITY // 03",
+    subtext: "App Router & SSR Architecture",
+    featured: false,
+  },
+  {
+    id: "nodejs",
+    number: "04",
+    name: "Node.js",
+    category: "BACKEND RUNTIME",
+    icon: "/icons/nodejs.svg",
+    accent: "nodejs",
+    status: "BUILDING",
+    abilityCode: "SYS.ABILITY // 04",
+    subtext: "Server Runtime & APIs",
+    featured: true,
+  },
+  {
+    id: "html",
+    number: "05",
+    name: "HTML5",
+    category: "SEMANTIC MARKUP",
+    icon: "/icons/html.svg",
+    accent: "html",
+    status: "CORE",
+    abilityCode: "SYS.ABILITY // 05",
+    subtext: "Web Structure & Accessibility",
+    featured: false,
+  },
+  {
+    id: "css",
+    number: "06",
+    name: "CSS3",
+    category: "STYLING & LAYOUT",
+    icon: "/icons/css.svg",
+    accent: "css",
+    status: "CORE",
+    abilityCode: "SYS.ABILITY // 06",
+    subtext: "Futuristic Design & Animations",
+    featured: false,
+  },
+  {
+    id: "mongodb",
+    number: "07",
+    name: "MongoDB",
+    category: "NO-SQL DATABASE",
+    icon: "/icons/mongodb.svg",
+    accent: "mongodb",
+    status: "BUILDING",
+    abilityCode: "SYS.ABILITY // 07",
+    subtext: "Data Persistence & Schemas",
+    featured: false,
+  },
+  {
+    id: "git",
+    number: "08",
+    name: "Git",
+    category: "VERSION CONTROL",
+    icon: "/icons/git.svg",
+    accent: "git",
+    status: "CURRENT",
+    abilityCode: "SYS.ABILITY // 08",
+    subtext: "Source Tracking & Workflows",
+    featured: false,
+  },
+  {
+    id: "threejs",
+    number: "09",
+    name: "Three.js",
+    category: "CREATIVE 3D",
+    icon: "/icons/threejs.svg",
+    accent: "threejs",
+    status: "EXPLORING",
+    abilityCode: "SYS.ABILITY // 09",
+    subtext: "WebGL & 3D Web Graphics",
+    featured: false,
+  },
+  {
+    id: "python",
+    number: "10",
+    name: "Python",
+    category: "DATA & ANALYTICS",
+    icon: "/icons/python.svg",
+    accent: "python",
+    status: "LEARNING",
+    abilityCode: "SYS.ABILITY // 10",
+    subtext: "Data Science & Scripting",
+    featured: false,
+  },
+];
+
+/* =====================================================
+   INTERACTIVE SKILL CARD (CHAPTER 02: THE ARSENAL)
+===================================================== */
+function SkillCard({ skill }) {
+  return (
+    <CyberCardShell
+      className={`skill-card-shell skill-card-shell--${skill.accent} ${skill.featured ? "skill-card-shell--featured" : ""}`}
+      innerClassName={`skill-card skill-card--${skill.accent}`}
+    >
+      {/* Subtle Brand Background Glow Disc */}
+      <div className="skill-card-brand-glow" />
+      <div className="skill-card-scanline" />
+
+      {/* HUD Top Bar */}
+      <div className="skill-card-top">
+        <span className="skill-ability-code">{skill.abilityCode}</span>
+        <span className={`skill-status-badge skill-status-badge--${skill.status.toLowerCase()}`}>
+          <span className="skill-status-dot" />
+          {skill.status}
+        </span>
+      </div>
+
+      {/* Tech Icon Container */}
+      <div className="skill-icon-wrapper">
+        <div className="skill-icon-glow-ring" />
+        <img
+          src={skill.icon}
+          alt={`${skill.name} logo`}
+          className="skill-icon"
+          width={40}
+          height={40}
+          loading="lazy"
+        />
+      </div>
+
+      {/* Main Information */}
+      <div className="skill-body">
+        <div className="skill-number-watermark" aria-hidden="true">
+          {skill.number}
+        </div>
+        <span className="skill-category">{skill.category}</span>
+        <h3 className="skill-title">{skill.name}</h3>
+        <p className="skill-subtext">{skill.subtext}</p>
+      </div>
+
+      {/* CTA Footer */}
+      <div className="skill-footer">
+        <span className="skill-cta-text">EXPLORE ABILITY</span>
+        <span className="skill-cta-arrow">→</span>
+      </div>
+    </CyberCardShell>
+  );
+}
+
+
+/* =====================================================
+   MISSION CARD COMPONENT (CHAPTER 03)
+===================================================== */
+function MissionCard({ project }) {
+  return (
+    <CyberCardShell
+      className="mission-card-shell"
+      innerClassName="mission-card"
+      as="article"
+    >
+      <div className="mission-number">
+        {project.id}
+      </div>
+
+      <div className="mission-content">
+        <p className="mission-status">
+          MISSION {project.id}
+        </p>
+
+        <h3>
+          {project.title}
+        </h3>
+
+        <p className="mission-subtitle">
+          {project.subtitle}
+        </p>
+
+        <p className="mission-description">
+          {project.description}
+        </p>
+
+        <div className="mission-tech">
+          {project.tech.map((tech) => (
+            <span key={tech}>
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <SciFiButton
+          className="mission-button"
+          ariaLabel={`View Mission: ${project.title}`}
+        >
+          VIEW MISSION
+        </SciFiButton>
+      </div>
+    </CyberCardShell>
+  );
+}
+
+/* =====================================================
+   GITHUB HOVER TOOLTIP COMPONENT
+===================================================== */
+function GitHubTooltip({ href = "https://github.com/rohanmendon26-byte", label = "GitHub" }) {
+  return (
+    <div className="github-tooltip-wrapper">
+      <span
+        className="github-tooltip-btn group"
+        aria-label={label}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 15 15"
+          className="github-svg-icon"
+        >
+          <path
+            clipRule="evenodd"
+            fillRule="evenodd"
+            fill="currentColor"
+            d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"
+          />
+        </svg>
+        <span className="github-tooltip-label">
+          {label}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+/* =====================================================
+   LINKEDIN 3D LAYERED TOOLTIP COMPONENT
+===================================================== */
+function LinkedInTooltip({
+  href = "https://www.linkedin.com/",
+  label = "LinkedIn",
+}) {
+  return (
+    <div className="linkedin-tooltip-container">
+      <div className="linkedin-tooltip">{label}</div>
+
+      <span
+        className="linkedin-icon-link"
+        aria-label="LinkedIn Profile"
+      >
+        <div className="linkedin-layer">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span className="fab-linkedin">
+            <svg viewBox="0 0 448 512" height="1em">
+              <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
+            </svg>
+          </span>
+        </div>
+      </span>
+    </div>
+  );
+}
+
+/* =====================================================
+   EMAIL HOVER TOOLTIP COMPONENT
+===================================================== */
+function EmailTooltip({
+  href = "mailto:your-email@gmail.com",
+  label = "Mail",
+}) {
+  return (
+    <div className="email-tooltip-container">
+      <div className="email-tooltip">{label}</div>
+      <span
+        className="email-link"
+        aria-label={label}
+      >
+        <svg version="1.1" viewBox="0 0 100 100">
+          <path
+            d="M20 80A12 12 0 0 1 8 68v-40A12 12 0 0 1 20 16h56A12 12 0 0 1 88 28v40A12 12 0 0 1 76 80zm10.5 -47.12a4 4 0 1 0 -5.001 6.24l15.001 12.004a12 12 0 0 0 15.001 0l15.001 -12a4 4 0 1 0 -5.001 -6.247l-15.001 12a4 4 0 0 1 -5.001 0z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+    </div>
+  );
+}
+
+/* =====================================================
+   ALLY CARD COMPONENT (CHAPTER 04)
+===================================================== */
+function AllyCard({ profile }) {
+  const isGithub = profile.title === "GITHUB";
+  const isLinkedin = profile.title === "LINKEDIN";
+  const isEmail = profile.title === "EMAIL";
+  return (
+    <CyberCardShell
+      className="ally-card-shell"
+      innerClassName="ally-card"
+      aria-label={`${profile.title}: ${profile.subtitle}`}
+    >
+      <div className="ally-number">
+        {profile.number}
+      </div>
+
+      <div className="ally-content">
+        <p className="ally-status">
+          CONNECTION {profile.number}
+        </p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <h3>
+            {profile.title}
+          </h3>
+          {isGithub && <GitHubTooltip href={profile.url} label="GitHub" />}
+          {isLinkedin && <LinkedInTooltip href={profile.url} />}
+          {isEmail && <EmailTooltip href={profile.url} label="Mail" />}
+        </div>
+
+        <p className="ally-subtitle">
+          {profile.subtitle}
+        </p>
+
+        <p className="ally-description">
+          {profile.description}
+        </p>
+
+        <SciFiButton
+          as="a"
+          href={profile.url}
+          target={
+            profile.url.startsWith("mailto:")
+              ? undefined
+              : "_blank"
+          }
+          rel="noopener noreferrer"
+          className="ally-enter"
+          ariaLabel={`Connect via ${profile.title}`}
+        >
+          ENTER
+        </SciFiButton>
+      </div>
+    </CyberCardShell>
+  );
+}
 
 export default function Home() {
+  const mainRef = useRef(null);
+  const lenisRef = useRef(null);
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initialize high-performance smooth scrolling with Lenis
+    const lenis = new Lenis({
+      duration: 1.0,
+      lerp: 0.08,
+      duration: 1.0,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.4,
+    });
+    lenisRef.current = lenis;
+
+    // Connect Lenis to GSAP ScrollTrigger
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const updateTicker = (time) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(500, 33);
+
+    const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
+
+      // =====================================================
+      // 0. MASTER SCROLL TRIGGER (ONE TRUTH FOR THREE.JS CAMERA)
+      // =====================================================
+      ScrollTrigger.create({
+        trigger: mainRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.2,
+        onUpdate: (self) => {
+          scrollState.progress = self.progress;
+          scrollState.velocity = Math.abs(self.getVelocity() || 0);
+        },
+      });
+
+      // =====================================================
+      // 1. HERO PROLOGUE — INTRO & PINNED FLY-THROUGH EXIT
+      // =====================================================
+      const introTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      introTl
+        .fromTo(
+          ".welcome",
+          { opacity: 0, y: 20, letterSpacing: "20px" },
+          { opacity: 0.8, y: 0, letterSpacing: "12px", duration: 0.8, delay: 0.1 }
+        )
+        .fromTo(
+          "h1",
+          { opacity: 0, scale: 0.88, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.9 },
+          "-=0.6"
+        )
+        .fromTo(
+          ".line",
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 0.6, duration: 0.6 },
+          "-=0.4"
+        )
+        .fromTo(
+          [".name", ".role", ".enter"],
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
+          "-=0.4"
+        )
+        .fromTo(
+          ".scroll-indicator",
+          { opacity: 0 },
+          { opacity: 0.5, duration: 0.7 },
+          "-=0.2"
+        );
+
+      const heroExit = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      heroExit
+        .fromTo(
+          ".hero-content",
+          { scale: 1, opacity: 1 },
+          { scale: isMobile ? 3.5 : 5.8, opacity: 0, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          ".welcome",
+          { opacity: 0.8, scale: 1, y: 0 },
+          { opacity: 0, scale: isMobile ? 2.0 : 3.2, y: -80, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          "h1",
+          { scale: 1, opacity: 1, y: 0 },
+          { scale: isMobile ? 3.2 : 5.5, opacity: 0, y: -40, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          ".line",
+          { scaleX: 1, opacity: 0.6 },
+          { scaleX: 6, opacity: 0, ease: "power2.in", duration: 0.9 },
+          0
+        )
+        .fromTo(
+          ".name",
+          { scale: 1, opacity: 1, y: 0 },
+          { scale: isMobile ? 2.0 : 3.5, opacity: 0, y: 60, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          ".role",
+          { scale: 1, opacity: 1, y: 0 },
+          { scale: isMobile ? 2.0 : 3.5, opacity: 0, y: 90, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          ".enter",
+          { opacity: 1, scale: 1, y: 0 },
+          { opacity: 0, scale: isMobile ? 2.2 : 3.8, y: 100, ease: "power2.in", duration: 1 },
+          0
+        )
+        .fromTo(
+          ".scroll-indicator",
+          { opacity: 0.5, scale: 1 },
+          { opacity: 0, scale: 2, ease: "power2.in", duration: 0.5 },
+          0
+        )
+        .to(
+          ".hero",
+          { opacity: 0, pointerEvents: "none", duration: 0.3 },
+          0.75
+        );
+
+      // =====================================================
+      // 2. CHAPTER 01 — ORIGIN / ABOUT ME (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const originTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".origin",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      originTl
+        // Entrance: Subtle scale and opacity boost (never 0)
+        .fromTo(
+          ".origin",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".origin-visual",
+          { opacity: 0.5, scale: 0.92, x: isMobile ? 0 : -30 },
+          { opacity: 1, scale: 1, x: 0, duration: 0.25, ease: "power2.out" },
+          0.05
+        )
+        .fromTo(
+          [".origin-chapter-label", ".origin-title", ".origin-name"],
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          ".origin-academic-wrapper",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.18
+        )
+        .fromTo(
+          ".origin-stat-card-shell",
+          { opacity: 0.5, scale: 0.95, y: 10 },
+          { opacity: 1, scale: 1, y: 0, stagger: 0.03, duration: 0.22, ease: "power2.out" },
+          0.22
+        )
+        .fromTo(
+          ".origin-dsa-wrapper",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.28
+        )
+        .fromTo(
+          ".dsa-profile-card",
+          { opacity: 0.5, scale: 0.96, y: 10 },
+          { opacity: 1, scale: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
+          0.32
+        )
+        .fromTo(
+          ".origin-tech-pill",
+          { opacity: 0.5, scale: 0.9 },
+          { opacity: 1, scale: 1, stagger: 0.02, duration: 0.2, ease: "power2.out" },
+          0.38
+        )
+        // Exit: Soft fade (drops only to 0.35, never 0)
+        .to(
+          ".origin",
+          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
+          0.8
+        );
+
+      // Fast, subtle number counter animation
+      const statNumElements = gsap.utils.toArray(".origin-stat-value-num");
+      const statValues = [
+        { target: 95.65, decimals: 2, suffix: "%" },
+        { target: 90.67, decimals: 2, suffix: "%" },
+        { target: 9.26, decimals: 2, suffix: "" },
+      ];
+
+      statNumElements.forEach((el, idx) => {
+        if (!el || !statValues[idx]) return;
+        const info = statValues[idx];
+        const obj = { val: 0 };
+        el.textContent = `0.00${info.suffix}`;
+        originTl.to(
+          obj,
+          {
+            val: info.target,
+            duration: 0.2,
+            ease: "power1.out",
+            onUpdate: () => {
+              if (el) {
+                el.textContent = `${obj.val.toFixed(info.decimals)}${info.suffix}`;
+              }
+            },
+          },
+          0.25 + idx * 0.03
+        );
+      });
+
+      // =====================================================
+      // 3. CHAPTER 02 — THE JOURNEY (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const journeyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".journey",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      journeyTl
+        .fromTo(
+          ".journey",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".journey-title",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          ".journey-text",
+          { opacity: 0.5, y: 15 },
+          { opacity: 0.85, y: 0, duration: 0.25, ease: "power2.out" },
+          0.15
+        )
+        .fromTo(
+          ".timeline",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.2
+        )
+        .fromTo(
+          ".timeline-item",
+          { opacity: 0.5, y: 15, scale: 0.96 },
+          { opacity: 1, y: 0, scale: 1, stagger: 0.05, duration: 0.25, ease: "power2.out" },
+          0.25
+        )
+        .to(
+          ".journey",
+          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
+          0.8
+        );
+
+      // Timeline Progress Line (Scroll tracking along the timeline)
+      gsap.fromTo(
+        ".timeline-line-progress",
+        { scaleY: 0, transformOrigin: "top center" },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".timeline",
+            start: "top 70%",
+            end: "bottom 50%",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      // =====================================================
+      // 4. CHAPTER 03 — THE ARSENAL (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const arsenalTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".arsenal",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      arsenalTl
+        .fromTo(
+          ".arsenal",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".arsenal-header",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          ".skills-grid",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.2
+        )
+        .fromTo(
+          ".skill-card-shell",
+          { opacity: 0.5, scale: 0.95, y: 15 },
+          { opacity: 1, scale: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
+          0.25
+        )
+        .to(
+          ".arsenal",
+          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
+          0.8
+        );
+
+      // =====================================================
+      // 5. CHAPTER 04 — MISSIONS (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const missionsTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".missions",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      missionsTl
+        .fromTo(
+          ".missions",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".missions-header",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          ".mission-card",
+          { opacity: 0.5, scale: 0.96, y: 15 },
+          { opacity: 1, scale: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "power2.out" },
+          0.2
+        )
+        .to(
+          ".missions",
+          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
+          0.8
+        );
+
+      // =====================================================
+      // 6. CHAPTER 05 — ALLIES (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const alliesTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".allies",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      alliesTl
+        .fromTo(
+          ".allies",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".allies-header",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          ".allies-grid",
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
+          0.2
+        )
+        .fromTo(
+          ".ally-card",
+          { opacity: 0.5, y: 15, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, stagger: 0.05, duration: 0.25, ease: "power2.out" },
+          0.25
+        )
+        .to(
+          ".allies",
+          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
+          0.8
+        );
+
+      // =====================================================
+      // 7. FINAL CHAPTER — THE FINAL CHAPTER (HIGH-VISIBILITY TRANSITION)
+      // =====================================================
+      const finalTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".final-chapter",
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: 0.3,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      finalTl
+        .fromTo(
+          ".final-content",
+          { opacity: 0.4, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0
+        )
+        .fromTo(
+          ".final-title",
+          { scale: 0.9, opacity: 0.5 },
+          { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" },
+          0.1
+        )
+        .fromTo(
+          [".final-name", ".final-message"],
+          { opacity: 0.5, y: 15 },
+          { opacity: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "power2.out" },
+          0.2
+        )
+        .fromTo(
+          ".contact-button",
+          { opacity: 0.5, scale: 0.92 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+          0.35
+        )
+        .fromTo(
+          ".final-links",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
+          0.4
+        );
+    }, mainRef);
+
+    return () => {
+      ctx.revert();
+      gsap.ticker.remove(updateTicker);
+      lenis.destroy();
+    };
+  }, []);
+
+  const scrollToOrigin = () => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(".origin", {
+        offset: 0,
+        duration: 1.6,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    } else {
+      document.querySelector(".origin")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
+    <main className="portfolio" ref={mainRef}>
+      {/* Anime Futuristic Section Navigation HUD */}
+      <SectionNavigation lenisRef={lenisRef} />
+
+      {/* Top-Right Cyberpunk Sound HUD Switch */}
+      <AudioToggle />
+
+      {/* Background 3D Three.js Scene */}
+      <Scene />
+
+      {/* ================= HERO ================= */}
+      <section className="hero" id="home">
+        <div className="hero-content">
+          <p className="welcome">WELCOME TO</p>
+
+          <h1>
+            MY
+            <span>PORTFOLIO</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+          <div className="line" />
+
+          <p className="name">ROHAN MENDON</p>
+
+          <p className="role">
+            CREATIVE DEVELOPER
+            <span> • </span>
+            FULL-STACK DEVELOPER
+          </p>
+
+          <SciFiButton
+            className="enter"
+            onClick={scrollToOrigin}
+            ariaLabel="Enter the Journey"
+          >
+            ENTER THE JOURNEY
+          </SciFiButton>
+        </div>
+
+        <div className="scroll-indicator">SCROLL TO EXPLORE</div>
+      </section>
+
+      {/* ================= CHAPTER 01: ORIGIN (ABOUT ME) ================= */}
+      <section className="origin" id="about">
+        <div className="origin-container">
+          {/* Left: Cinematic Character Portrait Frame */}
+          <div className="origin-visual">
+            <div className="origin-glow-ring" />
+            <div className="origin-frame">
+              {/* Corner tech brackets */}
+              <div className="origin-corner origin-corner-tl" />
+              <div className="origin-corner origin-corner-tr" />
+              <div className="origin-corner origin-corner-bl" />
+              <div className="origin-corner origin-corner-br" />
+
+              {/* HUD Top Bar */}
+              <div className="origin-hud-top">
+                <span>01 // ORIGIN</span>
+                <span className="origin-hud-status">
+                  <span className="origin-hud-dot" />
+                  SYSTEM ONLINE
+                </span>
+              </div>
+
+              {/* Image Container with safe fallback */}
+              <div className="origin-image-wrapper">
+                {!imgError ? (
+                  <img
+                    src="/images/rohan.png"
+                    alt="Rohan Mendon"
+                    className="origin-image"
+                    onError={() => setImgError(true)}
+                  />
+                ) : (
+                  <div className="origin-image-fallback">
+                    <span>ROHAN MENDON</span>
+                    <span style={{ fontSize: "10px", opacity: 0.5 }}>IMAGE NOT FOUND</span>
+                  </div>
+                )}
+              </div>
+
+              {/* HUD Bottom Bar */}
+              <div className="origin-hud-bottom">
+                <span>ROHAN MENDON</span>
+                <span>PROTAGONIST // DEV</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Character Info / Developer Introduction */}
+          <div className="origin-content">
+            <div className="origin-chapter-label">CHAPTER 01</div>
+
+            <h2 className="origin-title">ORIGIN</h2>
+
+            <div className="origin-name">ROHAN MENDON</div>
+
+            <p className="origin-bio">
+              I'm a Computer Science student and developer who enjoys building
+              interactive digital experiences.
+            </p>
+
+            {/* Academic Status / Stats Section */}
+            <div className="origin-academic-wrapper">
+              <div className="origin-academic-header">
+                <span className="origin-academic-heading">ACADEMIC STATUS</span>
+                <span className="origin-academic-line" />
+              </div>
+
+              <div className="origin-academic-grid">
+                {academics.map((item) => (
+                  <CyberCardShell
+                    key={item.id}
+                    className="origin-stat-card-shell"
+                    innerClassName="origin-stat-card"
+                  >
+                    <span className="origin-stat-kanji" aria-hidden="true">
+                      {item.kanji}
+                    </span>
+
+                    <div className="origin-stat-top">
+                      <span className="origin-stat-id">{item.id}</span>
+                      <span className="origin-stat-label">{item.label}</span>
+                    </div>
+
+                    <div className="origin-stat-value">
+                      <span
+                        className="origin-stat-value-num"
+                        data-val={item.numericVal}
+                        data-suffix={item.suffix}
+                      />
+                    </div>
+
+                    <div className="origin-stat-subtext">{item.subtext}</div>
+                  </CyberCardShell>
+                ))}
+              </div>
+            </div>
+
+            {/* Problem Solving / Ability System Section */}
+            <div className="origin-dsa-wrapper">
+              <div className="origin-dsa-header">
+                <div className="origin-dsa-header-left">
+                  <span className="origin-dsa-heading">ABILITY SYSTEM // PROBLEM SOLVING</span>
+                  <span className="origin-dsa-kanji-title" aria-hidden="true">問題解決</span>
+                </div>
+                <span className="origin-dsa-line" />
+              </div>
+
+              <p className="origin-dsa-desc">
+                Currently strengthening my Data Structures and Algorithms skills by
+                solving problems and practicing competitive/problem-solving patterns
+                across LeetCode, GeeksforGeeks and Coding Ninjas.
+              </p>
+
+              <div className="origin-dsa-grid">
+                {codingProfiles.map((profile) => (
+                  <a
+                    key={profile.name}
+                    href={profile.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`dsa-profile-card dsa-profile-card--${profile.accent}`}
+                    aria-label={`${profile.name} - ${profile.description}`}
+                  >
+                    {/* Subtle Watermark Kanji */}
+                    <span className="dsa-card-kanji" aria-hidden="true">
+                      {profile.kanji}
+                    </span>
+
+                    {/* Ambient Glow */}
+                    <div className="dsa-card-glow" />
+
+                    {/* Top HUD Row: Platform Index & Corner Arrow */}
+                    <div className="dsa-card-top">
+                      <span className="dsa-card-tag">{profile.tag}</span>
+                      <span className="dsa-card-corner-arrow" aria-hidden="true">↗</span>
+                    </div>
+
+                    {/* Platform Official Icon */}
+                    <div className="dsa-card-icon-wrap">
+                      <img
+                        src={profile.icon}
+                        alt={`${profile.name} logo`}
+                        className="dsa-card-icon"
+                        width={30}
+                        height={30}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="dsa-card-body">
+                      <h3 className="dsa-card-title">{profile.name}</h3>
+                      <p className="dsa-card-desc">{profile.description}</p>
+                    </div>
+
+                    {/* CTA Footer */}
+                    <div className="dsa-card-footer">
+                      <span className="dsa-card-cta">
+                        VIEW PROFILE <span className="dsa-card-arrow">→</span>
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="origin-tech-wrapper">
+              <div className="origin-tech-heading">I work with:</div>
+              <div className="origin-tech-list">
+                <span className="origin-tech-pill">JavaScript</span>
+                <span className="origin-tech-pill">React</span>
+                <span className="origin-tech-pill">Next.js</span>
+                <span className="origin-tech-pill">Node.js</span>
+                <span className="origin-tech-pill">MongoDB</span>
+                <span className="origin-tech-pill">Tailwind</span>
+              </div>
+            </div>
+
+            <p className="origin-extra">
+              Outside of coding, I'm an anime lover, cricket enthusiast, and I
+              enjoy exploring creative technology.
+            </p>
+
+            <div className="origin-continue">
+              <span>CONTINUE // SCROLL</span>
+              <span>↓</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CHAPTER 02: THE JOURNEY ================= */}
+      <section className="journey" id="journey">
+        <div className="chapter-label">CHAPTER 02</div>
+
+        <h2 className="journey-title">THE JOURNEY</h2>
+
+        <p className="journey-text">
+          I started with Computer Science fundamentals, explored Web Development,
+          began strengthening my DSA and problem-solving skills, and am now also learning
+          Data Science while continuing to build and experiment with technology.
+        </p>
+
+        <div className="timeline">
+          {/* Ambient vertical neon line */}
+          <div className="timeline-line-base" />
+          <div className="timeline-line-progress" />
+
+          {journeyEntries.map((entry) => (
+            <div
+              key={entry.id}
+              className={`timeline-item ${entry.isCurrent ? "timeline-item--current" : ""}`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              <div className="timeline-marker-col">
+                <span className={`timeline-year ${entry.isCurrent ? "highlight-year" : ""}`}>
+                  {entry.label}
+                </span>
+                <div className="timeline-dot" />
+              </div>
+
+              <CyberCardShell
+                className={`timeline-card-shell ${entry.isCurrent ? "timeline-card-shell--current" : ""}`}
+                innerClassName={`timeline-card ${entry.isCurrent ? "timeline-card--current active-arc" : ""}`}
+              >
+                {/* Kanji watermark */}
+                <span className="timeline-card-kanji" aria-hidden="true">
+                  {entry.kanji}
+                </span>
+
+                <div className="timeline-card-header">
+                  <span className="timeline-card-badge">{entry.label}</span>
+                  {entry.isCurrent && (
+                    <span className="timeline-card-status">
+                      <span className="timeline-card-status-dot" />
+                      ACTIVE
+                    </span>
+                  )}
+                </div>
+
+                <h3>{entry.title}</h3>
+                <p>{entry.description}</p>
+
+                <div className="card-tags">
+                  {entry.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={`tag ${entry.isCurrent ? "highlight-tag-pill" : ""}`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </CyberCardShell>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= CHAPTER 02: THE ARSENAL ================= */}
+      <section className="arsenal" id="arsenal">
+        <div className="arsenal-header">
+          <p className="chapter-label">CHAPTER 02</p>
+          <h2 className="arsenal-title">ARSENAL</h2>
+          <p className="arsenal-subtitle">
+            MY TECHNOLOGICAL ABILITIES // ABILITY SYSTEM ONLINE
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="skills-grid">
+          {skills.map((skill) => (
+            <SkillCard key={skill.id} skill={skill} />
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* ================= CHAPTER 04: MISSIONS ================= */}
+      <section className="missions" id="missions">
+        <div className="missions-header">
+          <p className="chapter-label">
+            CHAPTER 04
+          </p>
+
+          <h2 className="missions-title">
+            MISSIONS
+          </h2>
+
+          <p className="missions-subtitle">
+            Every project is another mission.
+            <br />
+            These are the worlds I've built.
+          </p>
+        </div>
+
+        <div className="missions-list">
+          {projects.map((project) => (
+            <MissionCard
+              key={project.id}
+              project={project}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ================= CHAPTER 05: ALLIES ================= */}
+      <section className="allies" id="allies">
+        <div className="allies-header">
+          <p className="chapter-label">
+            CHAPTER 05
+          </p>
+
+          <h2 className="allies-title">
+            ALLIES
+          </h2>
+
+          <p className="allies-subtitle">
+            The places where my work
+            <br />
+            continues beyond this world.
+          </p>
+        </div>
+
+        <div className="allies-grid">
+          {profiles.map((profile) => (
+            <AllyCard
+              key={profile.number}
+              profile={profile}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ================= FINAL CHAPTER ================= */}
+      <section className="final-chapter" id="contact">
+        <div className="final-content">
+          <p className="chapter-label">
+            FINAL CHAPTER
+          </p>
+
+          <h2 className="final-title">
+            THE FINAL
+            <span>CHAPTER</span>
+          </h2>
+
+          <div className="final-line" />
+
+          <h3 className="final-name">
+            ROHAN MENDON
+          </h3>
+
+          <p className="final-message">
+            LET'S BUILD SOMETHING
+            <br />
+            <strong>AMAZING.</strong>
+          </p>
+
+          <SciFiButton
+            as="a"
+            href={`mailto:${contact.email}`}
+            className="contact-button"
+            ariaLabel="Contact Me via Email"
+          >
+            CONTACT ME
+          </SciFiButton>
+
+          <div className="final-links">
+            <GitHubTooltip href={contact.github} label="GitHub" />
+
+            <LinkedInTooltip href={contact.linkedin} />
+
+            <EmailTooltip href={`mailto:${contact.email}`} label="Mail" />
+          </div>
+        </div>
+
+        <div className="final-footer">
+          <span>
+            ROHAN MENDON © 2026
+          </span>
+
+          <span>
+            BUILT WITH NEXT.JS + THREE.JS
+          </span>
+        </div>
+      </section>
+    </main>
   );
 }
