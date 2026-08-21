@@ -9,6 +9,7 @@ import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import ProjectModal from "@/components/ProjectModal";
 import Starfield from "@/components/Starfield";
+import Card from "@/components/Card";
 import { CyberCardShell } from "@/components/CyberCard";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -471,53 +472,78 @@ function SkillCard({ skill }) {
 
 
 /* =====================================================
-   MISSION CARD COMPONENT (CHAPTER 03)
+   MISSION CARD COMPONENT (CHAPTER 04: MISSIONS)
 ===================================================== */
 function MissionCard({ project, onSelect }) {
   return (
-    <CyberCardShell
-      className="mission-card-shell"
-      innerClassName="mission-card"
-      as="article"
-    >
-      <div className="mission-number">
-        {project.id}
+    <div className="mission-glow-card" id={`mission-card-${project.id}`}>
+      <b />
+      
+      {/* Central Visual Badge (Glitches/Scales on hover) */}
+      <div className="mission-card-visual">
+        <span className="mission-badge-id">MISSION {project.id}</span>
+        <h3 className="mission-badge-title">{project.title}</h3>
+        <span className="mission-badge-subtitle">{project.subtitle}</span>
       </div>
 
-      <div className="mission-content">
-        <p className="mission-status">
-          MISSION {project.id}
-        </p>
-
-        <h3>
+      {/* Sliding Content Container */}
+      <div className="content">
+        <p className="title">
           {project.title}
-        </h3>
-
-        <p className="mission-subtitle">
-          {project.subtitle}
+          <br />
+          <span>{project.subtitle}</span>
         </p>
 
-        <p className="mission-description">
-          {project.description}
-        </p>
+        <p className="mission-glow-desc">{project.description}</p>
 
-        <div className="mission-tech">
-          {project.tech.map((tech) => (
-            <span key={tech}>
-              {tech}
-            </span>
+        <div className="mission-glow-tech">
+          {project.tech.map((t) => (
+            <span key={t} className="mission-glow-pill">{t}</span>
           ))}
         </div>
 
-        <SciFiButton
-          className="mission-button"
-          ariaLabel={`View Mission: ${project.title}`}
-          onClick={() => onSelect && onSelect(project)}
-        >
-          VIEW MISSION
-        </SciFiButton>
+        <ul className="sci">
+          {project.githubUrl && (
+            <li>
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Repository"
+              >
+                <svg className="fa-brands" width={16} height={16} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor">
+                  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 0 0 20.9-6.5 69 25.8 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c48.1-32.6 69-25.8 69-25.8 13.7 34.6 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17.1 23.2 17.1 46.7 0 33.7-.3 60.7-.3 69 0 6.5 4.6 14.4 17.3 12.1C426.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"/>
+                </svg>
+              </a>
+            </li>
+          )}
+          {project.liveUrl && (
+            <li>
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Live Demo"
+              >
+                <svg className="fa-brands" width={16} height={16} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                  <path d="M432 320H400a16 16 0 0 0-16 16v112H64V128h112a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16H48A48 48 0 0 0 0 112v352a48 48 0 0 0 48 48h352a48 48 0 0 0 48-48V336a16 16 0 0 0-16-16zM488 0H360a24 24 0 0 0-17 41l43 43-171 171a24 24 0 0 0 0 34l22 22a24 24 0 0 0 34 0l171-171 43 43a24 24 0 0 0 41-17V24a24 24 0 0 0-24-24z"/>
+                </svg>
+              </a>
+            </li>
+          )}
+          <li>
+            <button
+              type="button"
+              className="mission-details-btn"
+              onClick={() => onSelect && onSelect(project)}
+              aria-label={`View Mission Details: ${project.title}`}
+            >
+              DETAILS
+            </button>
+          </li>
+        </ul>
       </div>
-    </CyberCardShell>
+    </div>
   );
 }
 
@@ -609,50 +635,45 @@ function EmailTooltip({
 }
 
 /* =====================================================
-   ALLY CARD COMPONENT (CHAPTER 04)
+   ALLY CARD COMPONENT (CHAPTER 05: ALLIES)
 ===================================================== */
 function AllyCard({ profile }) {
   const isGithub = profile.title === "GITHUB";
   const isLinkedin = profile.title === "LINKEDIN";
   const isEmail = profile.title === "EMAIL";
+
   return (
-    <CyberCardShell
-      className="ally-card-shell"
-      innerClassName="ally-card"
+    <div
+      className="ally-card-container"
+      id={`ally-card-${profile.number}`}
       aria-label={`${profile.title}: ${profile.subtitle}`}
     >
+      <div className="content">
+        <div className="ally-top">
+          <p className="ally-status">CONNECTION {profile.number}</p>
 
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginTop: "8px" }}>
+            <h3 style={{ fontFamily: "var(--font-orbitron, 'Orbitron', sans-serif)", fontSize: "20px", fontWeight: 800, letterSpacing: "2px", color: "#fff", margin: 0 }}>
+              {profile.title}
+            </h3>
+            {isGithub && <GitHubTooltip href={profile.url} label="GitHub" />}
+            {isLinkedin && <LinkedInTooltip href={profile.url} />}
+            {isEmail && <EmailTooltip href={profile.url} label="Mail" />}
+          </div>
 
-      <div className="ally-content">
-        <p className="ally-status">
-          CONNECTION {profile.number}
-        </p>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-          <h3>
-            {profile.title}
-          </h3>
-          {isGithub && <GitHubTooltip href={profile.url} label="GitHub" />}
-          {isLinkedin && <LinkedInTooltip href={profile.url} />}
-          {isEmail && <EmailTooltip href={profile.url} label="Mail" />}
+          <p className="ally-subtitle" style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginTop: "6px", letterSpacing: "1px" }}>
+            {profile.subtitle}
+          </p>
         </div>
 
-        <p className="ally-subtitle">
-          {profile.subtitle}
-        </p>
-
-        <p className="ally-description">
+        <p className="ally-description" style={{ fontSize: "14px", color: "rgba(255,255,255,0.8)", lineHeight: "1.6", margin: "16px 0" }}>
           {profile.description}
         </p>
 
         <SciFiButton
           as="a"
           href={profile.url}
-          target={
-            profile.url.startsWith("mailto:")
-              ? undefined
-              : "_blank"
-          }
+          target={profile.url.startsWith("mailto:") ? undefined : "_blank"}
           rel="noopener noreferrer"
           className="ally-enter"
           ariaLabel={`Connect via ${profile.title}`}
@@ -660,7 +681,7 @@ function AllyCard({ profile }) {
           ENTER
         </SciFiButton>
       </div>
-    </CyberCardShell>
+    </div>
   );
 }
 
@@ -1023,6 +1044,16 @@ export default function Home() {
         <div className="scroll-indicator">SCROLL TO EXPLORE</div>
       </section>
 
+      {/* Cyber Section Divider: Welcome -> Origin */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">CHAPTER 01 // ORIGIN</span>
+        </div>
+      </div>
+
       {/* ================= CHAPTER 01: ORIGIN (ABOUT ME) ================= */}
       <section className="origin" id="about">
         <div className="origin-container">
@@ -1097,24 +1128,28 @@ export default function Home() {
                     className="origin-stat-card-shell"
                     innerClassName="origin-stat-card"
                   >
-                    <span className="origin-stat-kanji" aria-hidden="true">
-                      {item.kanji}
-                    </span>
+                    <Card>
+                      <span className="origin-stat-kanji" aria-hidden="true">
+                        {item.kanji}
+                      </span>
 
-                    <div className="origin-stat-top">
-                      <span className="origin-stat-id">{item.id}</span>
-                      <span className="origin-stat-label">{item.label}</span>
-                    </div>
+                      <div className="origin-stat-top">
+                        <span className="origin-stat-id">{item.id}</span>
+                        <span className="origin-stat-label">{item.label}</span>
+                      </div>
 
-                    <div className="origin-stat-value">
-                      <span
-                        className="origin-stat-value-num"
-                        data-val={item.numericVal}
-                        data-suffix={item.suffix}
-                      />
-                    </div>
+                      <div className="origin-stat-value">
+                        <span
+                          className="origin-stat-value-num"
+                          data-val={item.numericVal}
+                          data-suffix={item.suffix}
+                        >
+                          {item.value}
+                        </span>
+                      </div>
 
-                    <div className="origin-stat-subtext">{item.subtext}</div>
+                      <div className="origin-stat-subtext">{item.subtext}</div>
+                    </Card>
                   </CyberCardShell>
                 ))}
               </div>
