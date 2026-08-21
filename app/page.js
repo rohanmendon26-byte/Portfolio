@@ -5,6 +5,10 @@ import Scene from "@/components/Scene";
 import SciFiButton from "@/components/SciFiButton";
 import SectionNavigation from "@/components/SectionNavigation";
 import AudioToggle from "@/components/AudioToggle";
+import CustomCursor from "@/components/CustomCursor";
+import Preloader from "@/components/Preloader";
+import ProjectModal from "@/components/ProjectModal";
+import Starfield from "@/components/Starfield";
 import { CyberCardShell } from "@/components/CyberCard";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -152,13 +156,18 @@ const projects = [
     subtitle: "CREATOR MONETIZATION PLATFORM",
     description:
       "A full-stack platform that allows creators to build communities, create tiers, publish posts and receive support from their audience.",
-    tech: [
-      "NEXT.JS",
-      "MONGODB",
-      "NEXTAUTH",
-      "CLOUDINARY",
-      "TAILWIND",
+    fullDescription:
+      "GetMeAChai is a full-stack crowdfunding and creator support platform built with Next.js 16 and MongoDB. It empowers content creators to receive micro-donations, set funding milestones, and publish exclusive posts for supporters.",
+    highlights: [
+      "Next.js App Router architecture with Server Actions",
+      "MongoDB database layer with custom Mongoose schemas",
+      "OAuth authentication via NextAuth (GitHub & Google)",
+      "Cloudinary media upload pipeline for user covers & avatars",
+      "Dynamic creator dashboard & real-time analytics",
     ],
+    tech: ["NEXT.JS", "MONGODB", "NEXTAUTH", "CLOUDINARY", "TAILWIND"],
+    githubUrl: "https://github.com/rohanmendon26-byte",
+    liveUrl: "https://github.com/rohanmendon26-byte",
   },
   {
     id: "02",
@@ -166,36 +175,51 @@ const projects = [
     subtitle: "SECURE FULL-STACK APPLICATION",
     description:
       "A full-stack password management application with a React frontend, Express backend and MongoDB database.",
-    tech: [
-      "REACT",
-      "NODE.JS",
-      "EXPRESS",
-      "MONGODB",
+    fullDescription:
+      "A secure, encrypted vault application built to store and manage credentials safely. Features master key verification, client-side generation of strong passwords, and CRUD operations over a RESTful API.",
+    highlights: [
+      "RESTful API service built with Express.js & Node.js",
+      "Client-side password generator with custom complexity rules",
+      "MongoDB persistence with encrypted string payloads",
+      "Clean Cyberpunk UI interface with instant copy-to-clipboard",
     ],
+    tech: ["REACT", "NODE.JS", "EXPRESS", "MONGODB"],
+    githubUrl: "https://github.com/rohanmendon26-byte",
+    liveUrl: "https://github.com/rohanmendon26-byte",
   },
   {
     id: "03",
     title: "SPOTIFY CLONE",
-    subtitle: "MUSIC EXPERIENCE",
+    subtitle: "MUSIC STREAMING ENGINE",
     description:
       "A responsive Spotify-inspired interface focused on recreating the modern music streaming experience.",
-    tech: [
-      "HTML",
-      "CSS",
-      "JAVASCRIPT",
+    fullDescription:
+      "A interactive web audio player mimicking Spotify's core interface. Built using modern HTML5 Audio APIs, custom volume controls, playlist management, and responsive track sliders.",
+    highlights: [
+      "HTML5 Web Audio API integration with progress scrubbing",
+      "Custom audio queue & play/pause state synchronization",
+      "Pixel-perfect responsive design replicating desktop & mobile views",
     ],
+    tech: ["HTML", "CSS", "JAVASCRIPT"],
+    githubUrl: "https://github.com/rohanmendon26-byte",
+    liveUrl: "https://github.com/rohanmendon26-byte",
   },
   {
     id: "04",
     title: "NETFLIX CLONE",
-    subtitle: "STREAMING EXPERIENCE",
+    subtitle: "STREAMING INTERFACE",
     description:
       "A Netflix-inspired landing experience with a focus on responsive layouts and modern UI design.",
-    tech: [
-      "HTML",
-      "CSS",
-      "JAVASCRIPT",
+    fullDescription:
+      "A high-fidelity front-end clone of Netflix featuring dynamic hero previews, interactive FAQ accordions, multi-row media carousels, and responsive typography.",
+    highlights: [
+      "Responsive hero banner with video/backdrop overlay",
+      "Custom CSS Grid & Flexbox row carousel sliders",
+      "Interactive accordion component for membership FAQ",
     ],
+    tech: ["HTML", "CSS", "JAVASCRIPT"],
+    githubUrl: "https://github.com/rohanmendon26-byte",
+    liveUrl: "https://github.com/rohanmendon26-byte",
   },
   {
     id: "05",
@@ -203,11 +227,16 @@ const projects = [
     subtitle: "CORPORATE WEB EXPERIENCE",
     description:
       "A responsive recreation of the Microsoft homepage focused on layout, navigation and visual hierarchy.",
-    tech: [
-      "HTML",
-      "CSS",
-      "JAVASCRIPT",
+    fullDescription:
+      "A responsive replica of Microsoft's corporate portal. Demonstrates mastery over complex multi-column responsive grids, mega-menus, accessible navigation controls, and hero banners.",
+    highlights: [
+      "Multi-breakpoint responsive layout matching official desktop & mobile specifications",
+      "Mega-menu navigation drop-downs with accessible hover states",
+      "Clean, semantic HTML5 structure with optimized CSS assets",
     ],
+    tech: ["HTML", "CSS", "JAVASCRIPT"],
+    githubUrl: "https://github.com/rohanmendon26-byte",
+    liveUrl: "https://github.com/rohanmendon26-byte",
   },
 ];
 
@@ -265,6 +294,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 01",
     subtext: "Core Development & Logic",
     featured: true,
+    filterTags: ["frontend", "core"],
   },
   {
     id: "react",
@@ -277,6 +307,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 02",
     subtext: "Component Architecture & UI",
     featured: true,
+    filterTags: ["frontend"],
   },
   {
     id: "nextjs",
@@ -289,6 +320,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 03",
     subtext: "App Router & SSR Architecture",
     featured: false,
+    filterTags: ["frontend", "backend"],
   },
   {
     id: "nodejs",
@@ -301,6 +333,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 04",
     subtext: "Server Runtime & APIs",
     featured: true,
+    filterTags: ["backend"],
   },
   {
     id: "html",
@@ -313,6 +346,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 05",
     subtext: "Web Structure & Accessibility",
     featured: false,
+    filterTags: ["frontend", "core"],
   },
   {
     id: "css",
@@ -325,6 +359,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 06",
     subtext: "Futuristic Design & Animations",
     featured: false,
+    filterTags: ["frontend", "core"],
   },
   {
     id: "mongodb",
@@ -337,6 +372,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 07",
     subtext: "Data Persistence & Schemas",
     featured: false,
+    filterTags: ["backend"],
   },
   {
     id: "git",
@@ -349,6 +385,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 08",
     subtext: "Source Tracking & Workflows",
     featured: false,
+    filterTags: ["tools"],
   },
   {
     id: "threejs",
@@ -361,6 +398,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 09",
     subtext: "WebGL & 3D Web Graphics",
     featured: false,
+    filterTags: ["frontend"],
   },
   {
     id: "python",
@@ -373,6 +411,7 @@ const skills = [
     abilityCode: "SYS.ABILITY // 10",
     subtext: "Data Science & Scripting",
     featured: false,
+    filterTags: ["backend", "tools"],
   },
 ];
 
@@ -434,7 +473,7 @@ function SkillCard({ skill }) {
 /* =====================================================
    MISSION CARD COMPONENT (CHAPTER 03)
 ===================================================== */
-function MissionCard({ project }) {
+function MissionCard({ project, onSelect }) {
   return (
     <CyberCardShell
       className="mission-card-shell"
@@ -473,6 +512,7 @@ function MissionCard({ project }) {
         <SciFiButton
           className="mission-button"
           ariaLabel={`View Mission: ${project.title}`}
+          onClick={() => onSelect && onSelect(project)}
         >
           VIEW MISSION
         </SciFiButton>
@@ -581,9 +621,7 @@ function AllyCard({ profile }) {
       innerClassName="ally-card"
       aria-label={`${profile.title}: ${profile.subtitle}`}
     >
-      <div className="ally-number">
-        {profile.number}
-      </div>
+
 
       <div className="ally-content">
         <p className="ally-status">
@@ -630,6 +668,13 @@ export default function Home() {
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
   const [imgError, setImgError] = useState(false);
+  const [skillFilter, setSkillFilter] = useState("all");
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const filteredSkills =
+    skillFilter === "all"
+      ? skills
+      : skills.filter((s) => s.filterTags.includes(skillFilter));
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -650,7 +695,6 @@ export default function Home() {
 
     // Connect Lenis to GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
-
     const updateTicker = (time) => {
       lenis.raf(time * 1000);
     };
@@ -778,156 +822,7 @@ export default function Home() {
           0.75
         );
 
-      // =====================================================
-      // 2. CHAPTER 01 — ORIGIN / ABOUT ME (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const originTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".origin",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      originTl
-        // Entrance: Subtle scale and opacity boost (never 0)
-        .fromTo(
-          ".origin",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".origin-visual",
-          { opacity: 0.5, scale: 0.92, x: isMobile ? 0 : -30 },
-          { opacity: 1, scale: 1, x: 0, duration: 0.25, ease: "power2.out" },
-          0.05
-        )
-        .fromTo(
-          [".origin-chapter-label", ".origin-title", ".origin-name"],
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          ".origin-academic-wrapper",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.18
-        )
-        .fromTo(
-          ".origin-stat-card-shell",
-          { opacity: 0.5, scale: 0.95, y: 10 },
-          { opacity: 1, scale: 1, y: 0, stagger: 0.03, duration: 0.22, ease: "power2.out" },
-          0.22
-        )
-        .fromTo(
-          ".origin-dsa-wrapper",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.28
-        )
-        .fromTo(
-          ".dsa-profile-card",
-          { opacity: 0.5, scale: 0.96, y: 10 },
-          { opacity: 1, scale: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
-          0.32
-        )
-        .fromTo(
-          ".origin-tech-pill",
-          { opacity: 0.5, scale: 0.9 },
-          { opacity: 1, scale: 1, stagger: 0.02, duration: 0.2, ease: "power2.out" },
-          0.38
-        )
-        // Exit: Soft fade (drops only to 0.35, never 0)
-        .to(
-          ".origin",
-          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
-          0.8
-        );
-
-      // Fast, subtle number counter animation
-      const statNumElements = gsap.utils.toArray(".origin-stat-value-num");
-      const statValues = [
-        { target: 95.65, decimals: 2, suffix: "%" },
-        { target: 90.67, decimals: 2, suffix: "%" },
-        { target: 9.26, decimals: 2, suffix: "" },
-      ];
-
-      statNumElements.forEach((el, idx) => {
-        if (!el || !statValues[idx]) return;
-        const info = statValues[idx];
-        const obj = { val: 0 };
-        el.textContent = `0.00${info.suffix}`;
-        originTl.to(
-          obj,
-          {
-            val: info.target,
-            duration: 0.2,
-            ease: "power1.out",
-            onUpdate: () => {
-              if (el) {
-                el.textContent = `${obj.val.toFixed(info.decimals)}${info.suffix}`;
-              }
-            },
-          },
-          0.25 + idx * 0.03
-        );
-      });
-
-      // =====================================================
-      // 3. CHAPTER 02 — THE JOURNEY (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const journeyTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".journey",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      journeyTl
-        .fromTo(
-          ".journey",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".journey-title",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          ".journey-text",
-          { opacity: 0.5, y: 15 },
-          { opacity: 0.85, y: 0, duration: 0.25, ease: "power2.out" },
-          0.15
-        )
-        .fromTo(
-          ".timeline",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.2
-        )
-        .fromTo(
-          ".timeline-item",
-          { opacity: 0.5, y: 15, scale: 0.96 },
-          { opacity: 1, y: 0, scale: 1, stagger: 0.05, duration: 0.25, ease: "power2.out" },
-          0.25
-        )
-        .to(
-          ".journey",
-          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
-          0.8
-        );
-
-      // Timeline Progress Line (Scroll tracking along the timeline)
+      // Timeline progress line fill on scroll
       gsap.fromTo(
         ".timeline-line-progress",
         { scaleY: 0, transformOrigin: "top center" },
@@ -944,176 +839,112 @@ export default function Home() {
         }
       );
 
-      // =====================================================
-      // 4. CHAPTER 03 — THE ARSENAL (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const arsenalTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".arsenal",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
+      // Section Smooth Entrance & Depth Zoom Transitions
+      const secConfigs = [
+        {
+          sec: ".origin",
+          hdr: ".origin-title, .origin-chapter-label",
+          items: ".origin-visual, .origin-bio, .origin-academic-wrapper, .origin-dsa-wrapper",
         },
+        {
+          sec: ".arsenal",
+          hdr: ".arsenal-header",
+          items: ".arsenal-filter-bar, .skill-card-shell",
+        },
+        {
+          sec: ".missions",
+          hdr: ".missions-header",
+          items: ".mission-card-shell",
+        },
+        {
+          sec: ".allies",
+          hdr: ".allies-header",
+          items: ".ally-card",
+        },
+        {
+          sec: ".contact",
+          hdr: ".contact-header",
+          items: ".contact-card",
+        },
+      ];
+
+      secConfigs.forEach(({ sec, hdr, items }) => {
+        const sectionEl = document.querySelector(sec);
+        if (!sectionEl) return;
+
+        const secTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionEl,
+            start: "top 82%",
+            end: "top 25%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        if (hdr) {
+          secTl.fromTo(
+            sec,
+            { opacity: 0.3, filter: "blur(6px)" },
+            { opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
+            0
+          );
+          secTl.fromTo(
+            hdr,
+            { opacity: 0, y: 55, scale: 0.9, filter: "blur(8px)" },
+            { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" },
+            0
+          );
+        }
+
+        if (items) {
+          secTl.fromTo(
+            items,
+            { opacity: 0, y: 40, scale: 0.94 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.12, ease: "power3.out" },
+            0.2
+          );
+        }
       });
 
-      arsenalTl
-        .fromTo(
-          ".arsenal",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".arsenal-header",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          ".skills-grid",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.2
-        )
-        .fromTo(
-          ".skill-card-shell",
-          { opacity: 0.5, scale: 0.95, y: 15 },
-          { opacity: 1, scale: 1, y: 0, stagger: 0.04, duration: 0.25, ease: "power2.out" },
-          0.25
-        )
-        .to(
-          ".arsenal",
-          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
-          0.8
-        );
-
-      // =====================================================
-      // 5. CHAPTER 04 — MISSIONS (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const missionsTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".missions",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
+      // Section Cyber Divider Laser Fill Animations
+      gsap.utils.toArray(".cyber-section-divider").forEach((divider) => {
+        const fillLine = divider.querySelector(".divider-line-fill");
+        const badge = divider.querySelector(".divider-badge");
+        if (fillLine) {
+          gsap.fromTo(
+            fillLine,
+            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: divider,
+                start: "top 90%",
+                end: "top 40%",
+                scrub: 0.6,
+              },
+            }
+          );
+        }
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, scale: 0.7, y: 15 },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              ease: "back.out(1.7)",
+              scrollTrigger: {
+                trigger: divider,
+                start: "top 85%",
+                end: "top 50%",
+                scrub: 0.4,
+              },
+            }
+          );
+        }
       });
-
-      missionsTl
-        .fromTo(
-          ".missions",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".missions-header",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          ".mission-card",
-          { opacity: 0.5, scale: 0.96, y: 15 },
-          { opacity: 1, scale: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "power2.out" },
-          0.2
-        )
-        .to(
-          ".missions",
-          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
-          0.8
-        );
-
-      // =====================================================
-      // 6. CHAPTER 05 — ALLIES (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const alliesTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".allies",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      alliesTl
-        .fromTo(
-          ".allies",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".allies-header",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          ".allies-grid",
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" },
-          0.2
-        )
-        .fromTo(
-          ".ally-card",
-          { opacity: 0.5, y: 15, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, stagger: 0.05, duration: 0.25, ease: "power2.out" },
-          0.25
-        )
-        .to(
-          ".allies",
-          { opacity: 0.35, scale: 0.96, duration: 0.25, ease: "power2.in" },
-          0.8
-        );
-
-      // =====================================================
-      // 7. FINAL CHAPTER — THE FINAL CHAPTER (HIGH-VISIBILITY TRANSITION)
-      // =====================================================
-      const finalTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".final-chapter",
-          start: "top bottom",
-          end: "bottom bottom",
-          scrub: 0.3,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      finalTl
-        .fromTo(
-          ".final-content",
-          { opacity: 0.4, scale: 0.94 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0
-        )
-        .fromTo(
-          ".final-title",
-          { scale: 0.9, opacity: 0.5 },
-          { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" },
-          0.1
-        )
-        .fromTo(
-          [".final-name", ".final-message"],
-          { opacity: 0.5, y: 15 },
-          { opacity: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "power2.out" },
-          0.2
-        )
-        .fromTo(
-          ".contact-button",
-          { opacity: 0.5, scale: 0.92 },
-          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" },
-          0.35
-        )
-        .fromTo(
-          ".final-links",
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
-          0.4
-        );
     }, mainRef);
 
     return () => {
@@ -1137,6 +968,20 @@ export default function Home() {
 
   return (
     <main className="portfolio" ref={mainRef}>
+      {/* Animated Cosmic Starfield Background */}
+      <Starfield />
+
+      {/* Sci-Fi WebGL Preloader */}
+      <Preloader />
+
+      {/* Project Detail Briefing Modal */}
+      <ProjectModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
+
+      {/* Custom HUD Cursor */}
+      <CustomCursor />
       {/* Anime Futuristic Section Navigation HUD */}
       <SectionNavigation lenisRef={lenisRef} />
 
@@ -1369,6 +1214,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Cyber Section Divider: Origin -> Journey */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">CHAPTER 02 // THE JOURNEY</span>
+        </div>
+      </div>
+
       {/* ================= CHAPTER 02: THE JOURNEY ================= */}
       <section className="journey" id="journey">
         <div className="chapter-label">CHAPTER 02</div>
@@ -1436,22 +1291,65 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= CHAPTER 02: THE ARSENAL ================= */}
+      {/* Cyber Section Divider: Journey -> Arsenal */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">CHAPTER 03 // ARSENAL</span>
+        </div>
+      </div>
+
+      {/* ================= CHAPTER 03: THE ARSENAL ================= */}
       <section className="arsenal" id="arsenal">
         <div className="arsenal-header">
-          <p className="chapter-label">CHAPTER 02</p>
+          <p className="chapter-label">CHAPTER 03</p>
           <h2 className="arsenal-title">ARSENAL</h2>
           <p className="arsenal-subtitle">
             MY TECHNOLOGICAL ABILITIES // ABILITY SYSTEM ONLINE
           </p>
         </div>
 
-        <div className="skills-grid">
-          {skills.map((skill) => (
+        {/* Futuristic Cyber Filter Bar */}
+        <div className="arsenal-filter-bar" role="tablist" aria-label="Skill Categories">
+          {[
+            { id: "all", label: "ALL ABILITIES", count: skills.length },
+            { id: "frontend", label: "FRONTEND & UI", count: skills.filter((s) => s.filterTags.includes("frontend")).length },
+            { id: "backend", label: "BACKEND & DB", count: skills.filter((s) => s.filterTags.includes("backend")).length },
+            { id: "tools", label: "TOOLS & DEV", count: skills.filter((s) => s.filterTags.includes("tools")).length },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={skillFilter === tab.id}
+              className={`arsenal-filter-btn ${skillFilter === tab.id ? "is-active" : ""}`}
+              onClick={() => setSkillFilter(tab.id)}
+            >
+              <span className="filter-bracket">[</span>
+              <span className="filter-label">{tab.label}</span>
+              <span className="filter-count">({tab.count})</span>
+              <span className="filter-bracket">]</span>
+            </button>
+          ))}
+        </div>
+
+        <div className={`skills-grid ${skillFilter !== "all" ? "skills-grid--filtered" : ""}`}>
+          {filteredSkills.map((skill) => (
             <SkillCard key={skill.id} skill={skill} />
           ))}
         </div>
       </section>
+
+      {/* Cyber Section Divider: Arsenal -> Missions */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">CHAPTER 04 // MISSIONS</span>
+        </div>
+      </div>
 
       {/* ================= CHAPTER 04: MISSIONS ================= */}
       <section className="missions" id="missions">
@@ -1476,10 +1374,21 @@ export default function Home() {
             <MissionCard
               key={project.id}
               project={project}
+              onSelect={(proj) => setSelectedProject(proj)}
             />
           ))}
         </div>
       </section>
+
+      {/* Cyber Section Divider: Missions -> Allies */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">CHAPTER 05 // ALLIES</span>
+        </div>
+      </div>
 
       {/* ================= CHAPTER 05: ALLIES ================= */}
       <section className="allies" id="allies">
@@ -1508,6 +1417,16 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Cyber Section Divider: Allies -> Final Chapter */}
+      <div className="cyber-section-divider" aria-hidden="true">
+        <div className="divider-line-bg" />
+        <div className="divider-line-fill" />
+        <div className="divider-badge">
+          <span className="divider-dot" />
+          <span className="divider-text">FINAL CHAPTER // CONTACT</span>
+        </div>
+      </div>
 
       {/* ================= FINAL CHAPTER ================= */}
       <section className="final-chapter" id="contact">
