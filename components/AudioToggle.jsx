@@ -11,8 +11,8 @@ export default function AudioToggle() {
     setIsMuted(audioSystem.isMuted);
   }, []);
 
-  const handleToggle = () => {
-    const nextMuted = !isMuted;
+  const handleToggle = (e) => {
+    const nextMuted = e.target.checked;
     audioSystem.setMuted(nextMuted);
     setIsMuted(nextMuted);
     if (!nextMuted) {
@@ -21,46 +21,62 @@ export default function AudioToggle() {
   };
 
   return (
-    <button
-      type="button"
-      className={`hud-audio-toggle ${isMuted ? "muted" : "active"}`}
-      onClick={handleToggle}
-      onMouseEnter={() => audioSystem.playHoverTick()}
-      aria-label={isMuted ? "Unmute HUD Audio SFX" : "Mute HUD Audio SFX"}
-      title={isMuted ? "Audio SFX: OFF" : "Audio SFX: ON"}
-    >
-      {/* Equalizer / Speaker Icon Container */}
-      <div className="hud-audio-icon-wrap">
-        {!isMuted ? (
-          <div className="hud-sound-bars">
-            <span className="bar bar-1" />
-            <span className="bar bar-2" />
-            <span className="bar bar-3" />
-          </div>
-        ) : (
-          <svg
-            className="hud-mute-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="1" y1="1" x2="23" y2="23" />
-            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
-            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
-            <line x1="12" y1="19" x2="12" y2="23" />
-            <line x1="8" y1="23" x2="16" y2="23" />
+    <div className="hud-sound-toggle-wrapper">
+      <input
+        type="checkbox"
+        id="hud-audio-checkbox"
+        checked={isMuted}
+        onChange={handleToggle}
+      />
+      <label
+        htmlFor="hud-audio-checkbox"
+        className="hud-toggle-switch"
+        onMouseEnter={() => audioSystem.playHoverTick()}
+        aria-label={isMuted ? "Unmute Audio SFX" : "Mute Audio SFX"}
+        title={isMuted ? "Audio SFX: OFF" : "Audio SFX: ON"}
+      >
+        <div className="speaker">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75 75">
+            <path
+              d="M39.389,13.769 L22.235,28.606 L6,28.606 L6,47.699 L21.989,47.699 L39.389,62.75 L39.389,13.769z"
+              style={{
+                stroke: "var(--cyan, #00f0ff)",
+                strokeWidth: 5,
+                strokeLinejoin: "round",
+                fill: "var(--cyan, #00f0ff)",
+              }}
+            />
+            <path
+              d="M48,27.6a19.5,19.5 0 0 1 0,21.4M55.1,20.5a30,30 0 0 1 0,35.6M61.6,14a38.8,38.8 0 0 1 0,48.6"
+              style={{
+                fill: "none",
+                stroke: "var(--cyan, #00f0ff)",
+                strokeWidth: 5,
+                strokeLinecap: "round",
+              }}
+            />
           </svg>
-        )}
-      </div>
+        </div>
 
-      <span className="hud-audio-text">
-        SFX // {isMuted ? "OFF" : "ON"}
-      </span>
-
-      <span className="hud-audio-indicator-dot" />
-    </button>
+        <div className="mute-speaker">
+          <svg viewBox="0 0 75 75">
+            <path
+              d="m39,14-17,15H6V48H22l17,15z"
+              fill="rgba(255,255,255,0.4)"
+              stroke="rgba(255,255,255,0.4)"
+              strokeWidth={5}
+              strokeLinejoin="round"
+            />
+            <path
+              d="m49,26 20,24m0-24-20,24"
+              fill="none"
+              stroke="rgba(255,255,255,0.4)"
+              strokeWidth={5}
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+      </label>
+    </div>
   );
 }

@@ -17,18 +17,20 @@ import {
 
 import { scrollState } from "@/lib/scrollState";
 
+const MAX_PARTICLES = 700;
+
 /* =====================================================
    STAR / PARTICLE FIELD (WITH SCROLL VELOCITY WARP)
 ===================================================== */
 function ParticleField({ isMobile, smoothVelocityRef }) {
   const pointsRef = useRef();
   const { pointer } = useThree();
-  const count = isMobile ? 320 : 700;
+  const activeCount = isMobile ? 320 : 700;
 
   const positions = useMemo(() => {
-    const array = new Float32Array(count * 3);
+    const array = new Float32Array(MAX_PARTICLES * 3);
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < MAX_PARTICLES; i++) {
       const i3 = i * 3;
       array[i3] = (Math.random() - 0.5) * 35;
       array[i3 + 1] = (Math.random() - 0.5) * 25;
@@ -36,7 +38,7 @@ function ParticleField({ isMobile, smoothVelocityRef }) {
     }
 
     return array;
-  }, [count]);
+  }, []);
 
   useFrame(() => {
     if (!pointsRef.current) return;
@@ -60,11 +62,11 @@ function ParticleField({ isMobile, smoothVelocityRef }) {
   });
 
   return (
-    <points ref={pointsRef}>
+    <points key={`particle-field-${activeCount}`} ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={count}
+          count={activeCount}
           array={positions}
           itemSize={3}
         />
@@ -370,20 +372,144 @@ function CameraController({ smoothVelocityRef }) {
   return null;
 }
 
+const MAX_MATRIX_COUNT = 800;
+
+const THEME_COLORS = {
+  cyan: {
+    p1: "#00f0ff",
+    p2: "#a855f7",
+    p3: "#00ff88",
+  },
+  violet: {
+    p1: "#e040fb",
+    p2: "#7c4dff",
+    p3: "#00e5ff",
+  },
+  amber: {
+    p1: "#ffb300",
+    p2: "#ff6d00",
+    p3: "#ffd54f",
+  },
+};
+
+/* =====================================================
+   MATRIX DATA STREAM / DIGITAL RAIN (CYBERPUNK)
+===================================================== */
+function MatrixDataStream({ isMobile, smoothVelocityRef, activeTheme = "cyan" }) {
+  const pointsRef = useRef();
+  const activeCount = isMobile ? 380 : 800;
+
+  const { positions, colors, streamData } = useMemo(() => {
+    const posArr = new Float32Array(MAX_MATRIX_COUNT * 3);
+    const colArr = new Float32Array(MAX_MATRIX_COUNT * 3);
+    const dataArr = [];
+
+    const theme = THEME_COLORS[activeTheme] || THEME_COLORS.cyan;
+    const color1 = new THREE.Color(theme.p1);
+    const color2 = new THREE.Color(theme.p2);
+    const color3 = new THREE.Color(theme.p3);
+    const whiteLeadColor = new THREE.Color("#ffffff");
+
+    for (let i = 0; i < MAX_MATRIX_COUNT; i++) {
+      const i3 = i * 3;
+      const x = (Math.random() - 0.5) * 34;
+      const y = (Math.random() - 0.5) * 28;
+      const z = (Math.random() - 0.5) * 32 - 2;
+
+      posArr[i3] = x;
+      posArr[i3 + 1] = y;
+      posArr[i3 + 2] = z;
+
+      const rand = Math.random();
+      let color = color1;
+      if (rand < 0.15) {
+        color = whiteLeadColor;
+      } else if (rand < 0.65) {
+        color = rand < 0.4 ? color1 : color3;
+      } else {
+        color = color2;
+      }
+
+      colArr[i3] = color.r;
+      colArr[i3 + 1] = color.g;
+      colArr[i3 + 2] = color.b;
+
+      dataArr.push({
+        x,
+        y,
+        z,
+        speed: 0.05 + Math.random() * 0.09,
+      });
+    }
+
+    return { positions: posArr, colors: colArr, streamData: dataArr };
+  }, [activeTheme]);
+
+  useFrame(() => {
+    if (!pointsRef.current) return;
+    const posAttribute = pointsRef.current.geometry.attributes.position;
+    if (!posAttribute) return;
+    const array = posAttribute.array;
+    const vel = smoothVelocityRef.current;
+
+    for (let i = 0; i < activeCount; i++) {
+      const i3 = i * 3;
+      const item = streamData[i];
+      if (!item) continue;
+
+      let currentY = array[i3 + 1] - (item.speed + vel * 0.38);
+
+      if (currentY < -15) {
+        currentY = 15 + Math.random() * 5;
+      }
+
+      array[i3 + 1] = currentY;
+    }
+
+    posAttribute.needsUpdate = true;
+
+    const time = performance.now() * 0.001;
+    pointsRef.current.rotation.y = time * 0.012;
+  });
+
+  return (
+    <points key={`matrix-stream-${activeCount}-${activeTheme}`} ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={activeCount}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          count={activeCount}
+          array={colors}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={isMobile ? 0.055 : 0.045}
+        vertexColors
+        transparent
+        opacity={0.85}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
 /* =====================================================
    EXPERIENCE
 ===================================================== */
-function Experience({ isMobile }) {
+function Experience({ isMobile, activeTheme }) {
   const smoothVelocityRef = useRef(0);
 
   return (
     <>
       <CameraController smoothVelocityRef={smoothVelocityRef} />
-      <HyperspaceTunnel smoothVelocityRef={smoothVelocityRef} />
       <ParticleField isMobile={isMobile} smoothVelocityRef={smoothVelocityRef} />
-      <EnergyCore />
-      <EnergyRings />
-      <EnergyFragments />
+      <MatrixDataStream isMobile={isMobile} smoothVelocityRef={smoothVelocityRef} activeTheme={activeTheme} />
     </>
   );
 }
@@ -391,8 +517,38 @@ function Experience({ isMobile }) {
 /* =====================================================
    MAIN SCENE (OPTIMIZED)
 ===================================================== */
-export default function Scene() {
+export default function Scene({ activeTheme = "cyan" }) {
   const [isMobile, setIsMobile] = useState(false);
+
+  const customClock = useMemo(() => {
+    let startTime = performance.now();
+    let oldTime = startTime;
+    let elapsedTime = 0;
+    let running = true;
+    return {
+      autoStart: true,
+      running: true,
+      startTime: startTime,
+      oldTime: oldTime,
+      elapsedTime: 0,
+      start() {
+        running = true;
+      },
+      stop() {
+        running = false;
+      },
+      getElapsedTime() {
+        if (running) elapsedTime = (performance.now() - startTime) / 1000;
+        return elapsedTime;
+      },
+      getDelta() {
+        const now = performance.now();
+        const diff = (now - oldTime) / 1000;
+        oldTime = now;
+        return diff;
+      },
+    };
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -406,6 +562,7 @@ export default function Scene() {
   return (
     <div className="scene">
       <Canvas
+        clock={customClock}
         camera={{
           position: [0, 0, 8],
           fov: 60,
@@ -415,7 +572,7 @@ export default function Scene() {
       >
         <color attach="background" args={["#050505"]} />
         <fog attach="fog" args={["#050505", 4, 28]} />
-        <Experience isMobile={isMobile} />
+        <Experience isMobile={isMobile} activeTheme={activeTheme} />
       </Canvas>
     </div>
   );

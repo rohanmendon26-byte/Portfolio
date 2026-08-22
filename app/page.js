@@ -5,12 +5,16 @@ import Scene from "@/components/Scene";
 import SciFiButton from "@/components/SciFiButton";
 import SectionNavigation from "@/components/SectionNavigation";
 import AudioToggle from "@/components/AudioToggle";
+import ThemeToggle from "@/components/ThemeToggle";
+import { useThemeState } from "@/lib/themeState";
 import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import ProjectModal from "@/components/ProjectModal";
 import Starfield from "@/components/Starfield";
 import Card from "@/components/Card";
 import { CyberCardShell } from "@/components/CyberCard";
+import { LampContainer } from "@/components/ui/lamp";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -61,7 +65,7 @@ const codingProfiles = [
     name: "LeetCode",
     description: "Data Structures & Algorithms",
     icon: "/icons/leetcode.svg",
-    url: "https://leetcode.com/", // Replace with actual LeetCode profile URL
+    url: "https://leetcode.com/u/Rohan_mendon117/",
     accent: "leetcode",
     tag: "01 / PLATFORM",
     kanji: "鍛錬",
@@ -71,7 +75,7 @@ const codingProfiles = [
     name: "GeeksforGeeks",
     description: "DSA & Problem Solving",
     icon: "/icons/gfg.svg",
-    url: "https://auth.geeksforgeeks.org/user/", // Replace with actual GFG profile URL
+    url: "https://www.geeksforgeeks.org/profile/rohanme1mbd",
     accent: "gfg",
     tag: "02 / PLATFORM",
     kanji: "修練",
@@ -81,7 +85,7 @@ const codingProfiles = [
     name: "Coding Ninjas",
     description: "DSA & Algorithms",
     icon: "/icons/coding-ninjas.svg",
-    url: "https://www.naukri.com/code360/profile/", // Replace with actual Coding Ninjas profile URL
+    url: "https://www.naukri.com/code360/profile/AlgoRohan",
     accent: "coding-ninjas",
     tag: "03 / PLATFORM",
     kanji: "攻略",
@@ -154,90 +158,59 @@ const projects = [
   {
     id: "01",
     title: "GET ME A CHAI",
-    subtitle: "CREATOR MONETIZATION PLATFORM",
+    subtitle: "CREATOR CROWDFUNDING & MEMBERSHIPS",
     description:
-      "A full-stack platform that allows creators to build communities, create tiers, publish posts and receive support from their audience.",
+      "A modern creator crowdfunding & subscription platform with Razorpay payments, tiered memberships, and exclusive content gating.",
     fullDescription:
-      "GetMeAChai is a full-stack crowdfunding and creator support platform built with Next.js 16 and MongoDB. It empowers content creators to receive micro-donations, set funding milestones, and publish exclusive posts for supporters.",
+      "GetMeAChai is a full-stack creator crowdfunding and subscription platform inspired by Patreon and BuyMeACoffee. Built with Next.js 16 (App Router), MongoDB Atlas, NextAuth.js, and Razorpay (UPI, Cards, NetBanking), it empowers creators to build custom profiles, setup membership tiers, publish supporters-only posts with content gating, track gross revenue telemetry, and receive instant payments.",
     highlights: [
-      "Next.js App Router architecture with Server Actions",
-      "MongoDB database layer with custom Mongoose schemas",
-      "OAuth authentication via NextAuth (GitHub & Google)",
-      "Cloudinary media upload pipeline for user covers & avatars",
-      "Dynamic creator dashboard & real-time analytics",
+      "Next.js 16 App Router architecture with MongoDB Atlas & Mongoose ODM",
+      "Razorpay Payment Gateway integration (UPI, Cards, NetBanking) with HMAC SHA256 signature verification",
+      "Multi-tier membership management with tier-based post & content gating",
+      "Multi-Provider Auth (Google OAuth, GitHub OAuth, and Credentials via NextAuth)",
+      "Real-time creator analytics dashboard (revenue, active supporters, payout logs)",
     ],
-    tech: ["NEXT.JS", "MONGODB", "NEXTAUTH", "CLOUDINARY", "TAILWIND"],
-    githubUrl: "https://github.com/rohanmendon26-byte",
-    liveUrl: "https://github.com/rohanmendon26-byte",
+    tech: ["NEXT.JS 16", "MONGODB", "RAZORPAY", "NEXTAUTH", "TAILWIND"],
+    githubUrl: "https://github.com/rohanmendon26-byte/GetMeAChai",
+    liveUrl: "https://get-me-a-chai-ecru.vercel.app/",
   },
   {
     id: "02",
-    title: "PASSWORD MANAGER",
-    subtitle: "SECURE FULL-STACK APPLICATION",
+    title: "LINKFORGE",
+    subtitle: "NEXT-GEN URL SHORTENER & CLICK TELEMETRY",
     description:
-      "A full-stack password management application with a React frontend, Express backend and MongoDB database.",
+      "A high-performance URL shortener with custom branded aliases, dynamic QR code studio, and real-time click telemetry.",
     fullDescription:
-      "A secure, encrypted vault application built to store and manage credentials safely. Features master key verification, client-side generation of strong passwords, and CRUD operations over a RESTful API.",
+      "LinkForge is a full-stack URL shortening and real-time click analytics platform built with Next.js 16, MongoDB Atlas, and NextAuth.js. It enables users to generate lightning-fast short links, custom branded aliases, high-resolution QR codes, and track visitor telemetry (geolocation, device breakdown, top referrers, and click volume timelines).",
     highlights: [
-      "RESTful API service built with Express.js & Node.js",
-      "Client-side password generator with custom complexity rules",
-      "MongoDB persistence with encrypted string payloads",
-      "Clean Cyberpunk UI interface with instant copy-to-clipboard",
+      "Ultra-low latency 302 redirections with NanoID collision resistance & reserved slug protection",
+      "Real-time click telemetry dashboard (Recharts volume timeline, geolocation, ua-parser-js device analytics)",
+      "Dynamic SVG/PNG QR Code Studio with 1-click download & clipboard copy",
+      "Multi-provider authentication (1-Click Demo Evaluation Mode, Google OAuth 2.0, GitHub OAuth)",
+      "MongoDB Atlas & Mongoose database layer with strict URL sanitization & rate limiting",
     ],
-    tech: ["REACT", "NODE.JS", "EXPRESS", "MONGODB"],
-    githubUrl: "https://github.com/rohanmendon26-byte",
-    liveUrl: "https://github.com/rohanmendon26-byte",
+    tech: ["NEXT.JS 16", "REACT 19", "MONGODB", "NEXTAUTH", "TAILWIND", "RECHARTS"],
+    githubUrl: "https://github.com/rohanmendon26-byte/URL-Shortener",
+    liveUrl: "https://url-shortener-coral-nine.vercel.app/",
   },
   {
     id: "03",
-    title: "SPOTIFY CLONE",
-    subtitle: "MUSIC STREAMING ENGINE",
+    title: "PASSOP",
+    subtitle: "SECURE PASSWORD VAULT & MANAGEMENT",
     description:
-      "A responsive Spotify-inspired interface focused on recreating the modern music streaming experience.",
+      "A full-stack password manager built with React, Express, and MongoDB Atlas featuring 1-click clipboard actions.",
     fullDescription:
-      "A interactive web audio player mimicking Spotify's core interface. Built using modern HTML5 Audio APIs, custom volume controls, playlist management, and responsive track sliders.",
+      "PassOP is a secure password management application built with React 18, Express.js REST API, and MongoDB Atlas. It enables users to store, edit, delete, and copy site credentials with one-click clipboard actions, show/hide password toggles, animated Lord Icons, and real-time toast feedback.",
     highlights: [
-      "HTML5 Web Audio API integration with progress scrubbing",
-      "Custom audio queue & play/pause state synchronization",
-      "Pixel-perfect responsive design replicating desktop & mobile views",
+      "React 18 frontend with Vite build system & Tailwind CSS visual design",
+      "Express.js RESTful API backend with CORS & MongoDB Atlas persistence",
+      "1-Click Clipboard copy for URLs, usernames, and passwords with toast feedback",
+      "Interactive password visibility toggle & instant entry edit mode",
+      "Animated Lord Icons & responsive mobile-first layout",
     ],
-    tech: ["HTML", "CSS", "JAVASCRIPT"],
-    githubUrl: "https://github.com/rohanmendon26-byte",
-    liveUrl: "https://github.com/rohanmendon26-byte",
-  },
-  {
-    id: "04",
-    title: "NETFLIX CLONE",
-    subtitle: "STREAMING INTERFACE",
-    description:
-      "A Netflix-inspired landing experience with a focus on responsive layouts and modern UI design.",
-    fullDescription:
-      "A high-fidelity front-end clone of Netflix featuring dynamic hero previews, interactive FAQ accordions, multi-row media carousels, and responsive typography.",
-    highlights: [
-      "Responsive hero banner with video/backdrop overlay",
-      "Custom CSS Grid & Flexbox row carousel sliders",
-      "Interactive accordion component for membership FAQ",
-    ],
-    tech: ["HTML", "CSS", "JAVASCRIPT"],
-    githubUrl: "https://github.com/rohanmendon26-byte",
-    liveUrl: "https://github.com/rohanmendon26-byte",
-  },
-  {
-    id: "05",
-    title: "MICROSOFT CLONE",
-    subtitle: "CORPORATE WEB EXPERIENCE",
-    description:
-      "A responsive recreation of the Microsoft homepage focused on layout, navigation and visual hierarchy.",
-    fullDescription:
-      "A responsive replica of Microsoft's corporate portal. Demonstrates mastery over complex multi-column responsive grids, mega-menus, accessible navigation controls, and hero banners.",
-    highlights: [
-      "Multi-breakpoint responsive layout matching official desktop & mobile specifications",
-      "Mega-menu navigation drop-downs with accessible hover states",
-      "Clean, semantic HTML5 structure with optimized CSS assets",
-    ],
-    tech: ["HTML", "CSS", "JAVASCRIPT"],
-    githubUrl: "https://github.com/rohanmendon26-byte",
-    liveUrl: "https://github.com/rohanmendon26-byte",
+    tech: ["REACT 18", "NODE.JS", "EXPRESS", "MONGODB", "TAILWIND"],
+    githubUrl: "https://github.com/rohanmendon26-byte/Password-Manager",
+    liveUrl: "https://password-manager-df75-xi.vercel.app/",
   },
 ];
 
@@ -259,7 +232,7 @@ const profiles = [
     subtitle: "PROFESSIONAL NETWORK",
     description:
       "Connect with me and follow my professional journey.",
-    url: "https://www.linkedin.com/",
+    url: "https://www.linkedin.com/in/rohanmendon/",
   },
   {
     number: "03",
@@ -267,7 +240,7 @@ const profiles = [
     subtitle: "DIRECT CONNECTION",
     description:
       "Have an idea, opportunity or project? Let's talk.",
-    url: "mailto:your-email@gmail.com",
+    url: "mailto:rohanmendon26@gmail.com",
   },
 ];
 
@@ -275,9 +248,9 @@ const profiles = [
    CONTACT INFORMATION (CHAPTER 05: FINAL CHAPTER)
 ===================================================== */
 const contact = {
-  email: "your-email@gmail.com",
+  email: "rohanmendon26@gmail.com",
   github: "https://github.com/rohanmendon26-byte",
-  linkedin: "https://www.linkedin.com/",
+  linkedin: "https://www.linkedin.com/in/rohanmendon/",
 };
 
 /* =====================================================
@@ -478,7 +451,7 @@ function MissionCard({ project, onSelect }) {
   return (
     <div className="mission-glow-card" id={`mission-card-${project.id}`}>
       <b />
-      
+
       {/* Central Visual Badge (Glitches/Scales on hover) */}
       <div className="mission-card-visual">
         <span className="mission-badge-id">MISSION {project.id}</span>
@@ -488,12 +461,6 @@ function MissionCard({ project, onSelect }) {
 
       {/* Sliding Content Container */}
       <div className="content">
-        <p className="title">
-          {project.title}
-          <br />
-          <span>{project.subtitle}</span>
-        </p>
-
         <p className="mission-glow-desc">{project.description}</p>
 
         <div className="mission-glow-tech">
@@ -512,7 +479,7 @@ function MissionCard({ project, onSelect }) {
                 aria-label="GitHub Repository"
               >
                 <svg className="fa-brands" width={16} height={16} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor">
-                  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 0 0 20.9-6.5 69 25.8 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c48.1-32.6 69-25.8 69-25.8 13.7 34.6 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17.1 23.2 17.1 46.7 0 33.7-.3 60.7-.3 69 0 6.5 4.6 14.4 17.3 12.1C426.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"/>
+                  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 0 0 20.9-6.5 69 25.8 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c48.1-32.6 69-25.8 69-25.8 13.7 34.6 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17.1 23.2 17.1 46.7 0 33.7-.3 60.7-.3 69 0 6.5 4.6 14.4 17.3 12.1C426.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z" />
                 </svg>
               </a>
             </li>
@@ -526,7 +493,7 @@ function MissionCard({ project, onSelect }) {
                 aria-label="Live Demo"
               >
                 <svg className="fa-brands" width={16} height={16} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-                  <path d="M432 320H400a16 16 0 0 0-16 16v112H64V128h112a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16H48A48 48 0 0 0 0 112v352a48 48 0 0 0 48 48h352a48 48 0 0 0 48-48V336a16 16 0 0 0-16-16zM488 0H360a24 24 0 0 0-17 41l43 43-171 171a24 24 0 0 0 0 34l22 22a24 24 0 0 0 34 0l171-171 43 43a24 24 0 0 0 41-17V24a24 24 0 0 0-24-24z"/>
+                  <path d="M432 320H400a16 16 0 0 0-16 16v112H64V128h112a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16H48A48 48 0 0 0 0 112v352a48 48 0 0 0 48 48h352a48 48 0 0 0 48-48V336a16 16 0 0 0-16-16zM488 0H360a24 24 0 0 0-17 41l43 43-171 171a24 24 0 0 0 0 34l22 22a24 24 0 0 0 34 0l171-171 43 43a24 24 0 0 0 41-17V24a24 24 0 0 0-24-24z" />
                 </svg>
               </a>
             </li>
@@ -553,9 +520,14 @@ function MissionCard({ project, onSelect }) {
 function GitHubTooltip({ href = "https://github.com/rohanmendon26-byte", label = "GitHub" }) {
   return (
     <div className="github-tooltip-wrapper">
-      <span
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         className="github-tooltip-btn group"
         aria-label={label}
+        onClick={() => audioSystem.playClickBlip()}
+        onMouseEnter={() => audioSystem.playHoverTick()}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -573,7 +545,7 @@ function GitHubTooltip({ href = "https://github.com/rohanmendon26-byte", label =
         <span className="github-tooltip-label">
           {label}
         </span>
-      </span>
+      </a>
     </div>
   );
 }
@@ -582,16 +554,21 @@ function GitHubTooltip({ href = "https://github.com/rohanmendon26-byte", label =
    LINKEDIN 3D LAYERED TOOLTIP COMPONENT
 ===================================================== */
 function LinkedInTooltip({
-  href = "https://www.linkedin.com/",
+  href = "https://www.linkedin.com/in/rohanmendon/",
   label = "LinkedIn",
 }) {
   return (
     <div className="linkedin-tooltip-container">
       <div className="linkedin-tooltip">{label}</div>
 
-      <span
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         className="linkedin-icon-link"
         aria-label="LinkedIn Profile"
+        onClick={() => audioSystem.playClickBlip()}
+        onMouseEnter={() => audioSystem.playHoverTick()}
       >
         <div className="linkedin-layer">
           <span />
@@ -604,7 +581,7 @@ function LinkedInTooltip({
             </svg>
           </span>
         </div>
-      </span>
+      </a>
     </div>
   );
 }
@@ -613,15 +590,19 @@ function LinkedInTooltip({
    EMAIL HOVER TOOLTIP COMPONENT
 ===================================================== */
 function EmailTooltip({
-  href = "mailto:your-email@gmail.com",
+  href = "mailto:rohanmendon26@gmail.com",
   label = "Mail",
 }) {
+  const mailUrl = href.startsWith("mailto:") ? href : `mailto:${href}`;
   return (
     <div className="email-tooltip-container">
       <div className="email-tooltip">{label}</div>
-      <span
+      <a
+        href={mailUrl}
         className="email-link"
         aria-label={label}
+        onClick={() => audioSystem.playClickBlip()}
+        onMouseEnter={() => audioSystem.playHoverTick()}
       >
         <svg version="1.1" viewBox="0 0 100 100">
           <path
@@ -629,7 +610,7 @@ function EmailTooltip({
             fill="currentColor"
           />
         </svg>
-      </span>
+      </a>
     </div>
   );
 }
@@ -691,6 +672,7 @@ export default function Home() {
   const [imgError, setImgError] = useState(false);
   const [skillFilter, setSkillFilter] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
+  const { activeTheme, changeTheme } = useThemeState();
 
   const filteredSkills =
     skillFilter === "all"
@@ -702,15 +684,14 @@ export default function Home() {
 
     // Initialize high-performance smooth scrolling with Lenis
     const lenis = new Lenis({
-      duration: 1.0,
-      lerp: 0.08,
-      duration: 1.0,
+      duration: 0.8,
+      lerp: 0.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.4,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
     });
     lenisRef.current = lenis;
 
@@ -843,22 +824,71 @@ export default function Home() {
           0.75
         );
 
-      // Timeline progress line fill on scroll
-      gsap.fromTo(
-        ".timeline-line-progress",
-        { scaleY: 0, transformOrigin: "top center" },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".timeline",
-            start: "top 70%",
-            end: "bottom 50%",
-            scrub: 0.5,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
+      // Timeline progress line fill and glowing time dot tracking on scroll (cached for 60fps)
+      const lineBase = document.querySelector(".timeline-line-base");
+      const items = gsap.utils.toArray(".timeline-item");
+      let itemRatios = [];
+
+      const cacheItemPositions = () => {
+        const timelineEl = document.querySelector(".timeline");
+        if (!timelineEl || !items.length) return;
+        const timelineRect = timelineEl.getBoundingClientRect();
+        const totalHeight = timelineRect.height || 1;
+
+        itemRatios = items.map((item) => {
+          const itemDot = item.querySelector(".timeline-dot");
+          if (!itemDot) return 0;
+          const dotRect = itemDot.getBoundingClientRect();
+          return (dotRect.top + dotRect.height / 2 - timelineRect.top) / totalHeight;
+        });
+      };
+
+      cacheItemPositions();
+      ScrollTrigger.addEventListener("refresh", cacheItemPositions);
+
+      const updateTimelineDots = (self) => {
+        const progress = self ? self.progress : 0;
+
+        items.forEach((item, index) => {
+          const ratio = itemRatios[index] || 0;
+          const dist = Math.abs(progress - ratio);
+
+          // Dot reached by timeline progress line
+          if (progress >= ratio - 0.03) {
+            item.classList.add("timeline-item--reached");
+          } else {
+            item.classList.remove("timeline-item--reached");
+          }
+
+          // Traveling time dot directly passing over this item dot
+          if (dist < 0.06) {
+            item.classList.add("timeline-item--super-glow");
+          } else {
+            item.classList.remove("timeline-item--super-glow");
+          }
+        });
+      };
+
+      if (lineBase) {
+        const getLineHeight = () => lineBase.offsetHeight;
+
+        gsap.fromTo(
+          ".timeline-line-progress",
+          { height: 0 },
+          {
+            height: getLineHeight,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".timeline",
+              start: "top 70%",
+              end: "bottom 50%",
+              scrub: 0.5,
+              invalidateOnRefresh: true,
+              onUpdate: updateTimelineDots,
+            },
+          }
+        );
+      }
 
       // Section Smooth Entrance & Depth Zoom Transitions
       const secConfigs = [
@@ -875,23 +905,26 @@ export default function Home() {
         {
           sec: ".missions",
           hdr: ".missions-header",
-          items: ".mission-card-shell",
+          items: ".mission-glow-card",
         },
         {
           sec: ".allies",
           hdr: ".allies-header",
-          items: ".ally-card",
+          items: ".ally-card-container",
         },
         {
-          sec: ".contact",
-          hdr: ".contact-header",
-          items: ".contact-card",
+          sec: ".final-chapter",
+          hdr: ".chapter-label, .final-title",
+          items: ".final-name, .final-message, .contact-button, .final-links",
         },
       ];
 
       secConfigs.forEach(({ sec, hdr, items }) => {
         const sectionEl = document.querySelector(sec);
         if (!sectionEl) return;
+
+        const hdrEls = hdr ? sectionEl.querySelectorAll(hdr) : [];
+        const itemEls = items ? sectionEl.querySelectorAll(items) : [];
 
         const secTl = gsap.timeline({
           scrollTrigger: {
@@ -902,24 +935,25 @@ export default function Home() {
           },
         });
 
-        if (hdr) {
+        secTl.fromTo(
+          sectionEl,
+          { opacity: 0.3 },
+          { opacity: 1, duration: 0.8, ease: "power2.out" },
+          0
+        );
+
+        if (hdrEls.length > 0) {
           secTl.fromTo(
-            sec,
-            { opacity: 0.3, filter: "blur(6px)" },
-            { opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
-            0
-          );
-          secTl.fromTo(
-            hdr,
-            { opacity: 0, y: 55, scale: 0.9, filter: "blur(8px)" },
-            { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "power3.out" },
+            hdrEls,
+            { opacity: 0, y: 45, scale: 0.94 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" },
             0
           );
         }
 
-        if (items) {
+        if (itemEls.length > 0) {
           secTl.fromTo(
-            items,
+            itemEls,
             { opacity: 0, y: 40, scale: 0.94 },
             { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.12, ease: "power3.out" },
             0.2
@@ -1006,40 +1040,72 @@ export default function Home() {
       {/* Anime Futuristic Section Navigation HUD */}
       <SectionNavigation lenisRef={lenisRef} />
 
-      {/* Top-Right Cyberpunk Sound HUD Switch */}
-      <AudioToggle />
+      {/* Top-Left Audio SFX Toggle */}
+      <div className="hud-audio-bar">
+        <AudioToggle />
+      </div>
+
+      {/* Top-Right Cyberpunk Palette Switcher */}
+      <div className="hud-theme-bar">
+        <ThemeToggle activeTheme={activeTheme} onThemeChange={changeTheme} />
+      </div>
 
       {/* Background 3D Three.js Scene */}
-      <Scene />
+      <Scene activeTheme={activeTheme} />
 
       {/* ================= HERO ================= */}
       <section className="hero" id="home">
-        <div className="hero-content">
-          <p className="welcome">WELCOME TO</p>
+        <LampContainer className="bg-transparent pt-0 md:pt-14">
+          <div className="hero-content">
+            <motion.p
+              initial={{ opacity: 0.5, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8, ease: "easeInOut" }}
+              className="welcome"
+            >
+              WELCOME TO
+            </motion.p>
 
-          <h1>
-            MY
-            <span>PORTFOLIO</span>
-          </h1>
+            <motion.h1
+              initial={{ opacity: 0.5, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+            >
+              MY
+              <span>PORTFOLIO</span>
+            </motion.h1>
 
-          <div className="line" />
+            <div className="line" />
 
-          <p className="name">ROHAN MENDON</p>
+            <motion.p
+              initial={{ opacity: 0.5, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: "easeInOut" }}
+              className="name"
+            >
+              ROHAN MENDON
+            </motion.p>
 
-          <p className="role">
-            CREATIVE DEVELOPER
-            <span> • </span>
-            FULL-STACK DEVELOPER
-          </p>
+            <motion.p
+              initial={{ opacity: 0.5, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8, ease: "easeInOut" }}
+              className="role"
+            >
+              CREATIVE DEVELOPER
+              <span> • </span>
+              FULL-STACK DEVELOPER
+            </motion.p>
 
-          <SciFiButton
-            className="enter"
-            onClick={scrollToOrigin}
-            ariaLabel="Enter the Journey"
-          >
-            ENTER THE JOURNEY
-          </SciFiButton>
-        </div>
+            <SciFiButton
+              className="enter"
+              onClick={scrollToOrigin}
+              ariaLabel="Enter the Journey"
+            >
+              ENTER THE JOURNEY
+            </SciFiButton>
+          </div>
+        </LampContainer>
 
         <div className="scroll-indicator">SCROLL TO EXPLORE</div>
       </section>
@@ -1111,7 +1177,7 @@ export default function Home() {
 
             <p className="origin-bio">
               I'm a Computer Science student and developer who enjoys building
-              interactive digital experiences.
+              interactive digital experiences. I love coding and am passionate about solving real-world problems through clean, scalable engineering.
             </p>
 
             {/* Academic Status / Stats Section */}
@@ -1274,7 +1340,15 @@ export default function Home() {
         <div className="timeline">
           {/* Ambient vertical neon line */}
           <div className="timeline-line-base" />
-          <div className="timeline-line-progress" />
+
+          {/* Timeline progress line with glowing moving time dot attached to bar tip */}
+          <div className="timeline-line-progress">
+            <div className="timeline-progress-dot" aria-hidden="true">
+              <div className="timeline-progress-dot-core" />
+              <div className="timeline-progress-dot-ring" />
+              <div className="timeline-progress-dot-halo" />
+            </div>
+          </div>
 
           {journeyEntries.map((entry) => (
             <div
