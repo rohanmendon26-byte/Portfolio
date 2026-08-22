@@ -19,6 +19,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { scrollState } from "@/lib/scrollState";
+import { audioSystem } from "@/lib/audioSystem";
 
 /* =====================================================
    ACADEMIC STATUS DATA (CHAPTER 01: ORIGIN)
@@ -814,8 +815,8 @@ export default function Home() {
         )
         .fromTo(
           ".scroll-indicator",
-          { opacity: 0.5, scale: 1 },
-          { opacity: 0, scale: 2, ease: "power2.in", duration: 0.5 },
+          { opacity: 0.85, scale: 1, y: 0 },
+          { opacity: 0, scale: isMobile ? 2.2 : 3.8, y: 110, ease: "power2.in", duration: 1 },
           0
         )
         .to(
@@ -1104,10 +1105,43 @@ export default function Home() {
             >
               ENTER THE JOURNEY
             </SciFiButton>
+
+            <div
+              className="scroll-indicator"
+              onClick={() => {
+                audioSystem.playClickBlip();
+                scrollToOrigin();
+              }}
+              onMouseEnter={() => audioSystem.playHoverTick()}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  audioSystem.playClickBlip();
+                  scrollToOrigin();
+                }
+              }}
+              aria-label="Scroll down to explore origin"
+            >
+              <span className="scroll-indicator-text">SCROLL TO EXPLORE</span>
+              <div className="scroll-indicator-chevron">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 10l5 5 5-5" />
+                  <path d="M7 4l5 5 5-5" />
+                </svg>
+              </div>
+            </div>
           </div>
         </LampContainer>
-
-        <div className="scroll-indicator">SCROLL TO EXPLORE</div>
       </section>
 
       {/* Cyber Section Divider: Welcome -> Origin */}
