@@ -23,15 +23,11 @@ export function CyberCardShell({
   ...props
 }) {
   const cardRef = useRef(null);
-  const [transformStyle, setTransformStyle] = useState({
-    transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-    transition: "transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease",
-  });
-  const [glareStyle, setGlareStyle] = useState({ opacity: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const bodyRef = useRef(null);
+  const glareRef = useRef(null);
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || !bodyRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -41,37 +37,41 @@ export function CyberCardShell({
     const rotX = ((y - centerY) / centerY) * -maxTilt;
     const rotY = ((x - centerX) / centerX) * maxTilt;
 
-    setTransformStyle({
-      transform: `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`,
-      transition: "transform 0.08s ease-out, border-color 0.3s ease, box-shadow 0.3s ease",
-    });
+    bodyRef.current.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`;
+    bodyRef.current.style.transition = "transform 0.08s ease-out, border-color 0.3s ease, box-shadow 0.3s ease";
 
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
-    setGlareStyle({
-      opacity: 1,
-      background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.24) 0%, rgba(0, 240, 255, 0.14) 30%, transparent 65%)`,
-    });
+    if (glareRef.current) {
+      const glareX = (x / rect.width) * 100;
+      const glareY = (y / rect.height) * 100;
+      glareRef.current.style.opacity = "1";
+      glareRef.current.style.background = `radial-gradient(circle at ${glareX.toFixed(1)}% ${glareY.toFixed(1)}%, rgba(255, 255, 255, 0.24) 0%, rgba(0, 240, 255, 0.14) 30%, transparent 65%)`;
+    }
   };
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    if (cardRef.current) {
+      cardRef.current.classList.add("is-hovered");
+    }
     audioSystem.playHoverTick();
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTransformStyle({
-      transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-      transition: "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease",
-    });
-    setGlareStyle({ opacity: 0 });
+    if (cardRef.current) {
+      cardRef.current.classList.remove("is-hovered");
+    }
+    if (bodyRef.current) {
+      bodyRef.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+      bodyRef.current.style.transition = "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease";
+    }
+    if (glareRef.current) {
+      glareRef.current.style.opacity = "0";
+    }
   };
 
   return (
     <Component
       ref={cardRef}
-      className={`cyber-card-frame ${isHovered ? "is-hovered" : ""} ${className}`}
+      className={`cyber-card-frame ${className}`}
       style={style}
       onClick={onClick}
       onMouseMove={handleMouseMove}
@@ -81,10 +81,10 @@ export function CyberCardShell({
     >
       <div className="cyber-canvas noselect">
         <div
+          ref={bodyRef}
           className={`cyber-card-body ${innerClassName}`}
-          style={transformStyle}
         >
-          <div className="card-glare" style={glareStyle} />
+          <div ref={glareRef} className="card-glare" style={{ opacity: 0 }} />
 
           {/* Animated horizontal cyber lines */}
           <div className="cyber-lines">

@@ -853,17 +853,17 @@ export default function Home() {
           const ratio = itemRatios[index] || 0;
           const dist = Math.abs(progress - ratio);
 
-          // Dot reached by timeline progress line
-          if (progress >= ratio - 0.03) {
+          const isReached = progress >= ratio - 0.03;
+          if (isReached && !item.classList.contains("timeline-item--reached")) {
             item.classList.add("timeline-item--reached");
-          } else {
+          } else if (!isReached && item.classList.contains("timeline-item--reached")) {
             item.classList.remove("timeline-item--reached");
           }
 
-          // Traveling time dot directly passing over this item dot
-          if (dist < 0.06) {
+          const isSuperGlow = dist < 0.06;
+          if (isSuperGlow && !item.classList.contains("timeline-item--super-glow")) {
             item.classList.add("timeline-item--super-glow");
-          } else {
+          } else if (!isSuperGlow && item.classList.contains("timeline-item--super-glow")) {
             item.classList.remove("timeline-item--super-glow");
           }
         });
