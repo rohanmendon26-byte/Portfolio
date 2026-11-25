@@ -196,22 +196,22 @@ const projects = [
   },
   {
     id: "03",
-    title: "PASSOP",
-    subtitle: "SECURE PASSWORD VAULT & MANAGEMENT",
+    title: "DULINGO",
+    subtitle: "AUDIO-FIRST PUBLIC SERVICES LEARNING PLATFORM",
     description:
-      "A full-stack password manager built with React, Express, and MongoDB Atlas, featuring one-click clipboard actions.",
+      "An audio-first gamified civic learning platform enabling citizens to learn public services through interactive listening, voice recognition, and daily tasks.",
     fullDescription:
-      "PassOP is a password management application built with React 18, Express.js REST API, and MongoDB Atlas. It enables users to store, edit, delete, and copy website credentials with one-click clipboard actions, show/hide password toggles, animated Lord Icons, and real-time toast feedback.",
+      "Dulingo is an audio-first civic learning platform designed to help citizens understand public services such as pensions, taxes, certificates, and welfare procedures. Built with React 18, Tailwind CSS, Express.js, and MongoDB, it features browser Web Speech API for text-to-speech and voice input, gamified streak freeze systems, daily audio tasks, interactive stories, and an AI-assisted teacher hub.",
     highlights: [
-      "React 18 frontend with Vite build system and Tailwind CSS",
-      "Express.js REST API backend with CORS and MongoDB Atlas persistence",
-      "One-click clipboard copying for URLs, usernames, and passwords",
-      "Password visibility toggle and entry editing functionality",
-      "Animated Lord Icons and responsive mobile-first layout",
+      "Interactive audio quizzes, fill-in-the-blank, and simulated government form tasks",
+      "Web Speech API integration for text-to-speech and speech-to-text voice input in multiple languages",
+      "Gamification system with XP, leaderboards, achievement badges, and streak freeze grace periods",
+      "Multilingual learning support across English, Hindi, and Kannada with regional civic translations",
+      "Teacher Hub featuring AI task drafting (Gemini & OpenAI), audio uploads, and essay review telemetry",
     ],
-    tech: ["REACT 18", "NODE.JS", "EXPRESS", "MONGODB", "TAILWIND"],
-    githubUrl: "https://github.com/rohanmendon26-byte/Password-Manager",
-    liveUrl: "https://password-manager-df75-xi.vercel.app/",
+    tech: ["REACT 18", "NODE.JS", "EXPRESS", "MONGODB", "TAILWIND", "WEB SPEECH API"],
+    githubUrl: "https://github.com/rohanmendon26-byte/Dulingo",
+    liveUrl: "https://dulingo.vercel.app/",
   },
 ];
 

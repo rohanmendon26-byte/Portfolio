@@ -73,11 +73,11 @@ Whether you are exploring project telemetry, inspecting problem-solving metrics,
 * **Tech Stack**: Next.js 16, React 19, MongoDB Atlas, Recharts, NextAuth.js
 * **Links**: [GitHub Repository](https://github.com/rohanmendon26-byte/URL-Shortener) • [Live Demo](https://url-shortener-coral-nine.vercel.app/)
 
-### 🔐 03. PassOP
-> **Secure Password Vault & Management System**
-* **Description**: Password management suite with 1-click clipboard actions, show/hide password toggles, Lord Icon animations, REST API backend, and instant entry edit modes.
-* **Tech Stack**: React 18, Express.js, Node.js, MongoDB Atlas, Tailwind CSS
-* **Links**: [GitHub Repository](https://github.com/rohanmendon26-byte/Password-Manager) • [Live Demo](https://password-manager-df75-xi.vercel.app/)
+### 🎧 03. Dulingo
+> **Audio-First Public Services Learning Platform**
+* **Description**: Interactive civic learning platform enabling citizens to learn public services and civic procedures through voice interaction, speech synthesis, daily audio tasks, gamified streak protection, and multilingual support.
+* **Tech Stack**: React 18, Express.js, Node.js, MongoDB, Web Speech API, Tailwind CSS
+* **Links**: [GitHub Repository](https://github.com/rohanmendon26-byte/Dulingo) • [Live Demo](https://dulingo.vercel.app/)
 
 ---
 
